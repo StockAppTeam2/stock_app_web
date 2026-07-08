@@ -1,0 +1,1 @@
+{"hosting":{"site":"stock-chitta-web","public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"]},"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"stock-ca487","configurations":{"web":"1:551403582687:web:23e8e4e14595798950a56a"}}}}}}

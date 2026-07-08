@@ -1,0 +1,975 @@
+{
+    "homePage": "HOME PAGE",
+    "@homePage": {
+        "description": "Home page heading text"
+    },
+     "homePageDrawer": "Home Page",
+    "@homePageDrawer": {
+        "description": "Home page heading text"
+    },
+    "openingStock": "OPENING STOCK",
+    "@openingStock":{
+        "description": " Opening stock text - Home page"
+    },
+    "receipt": "RECEIPT",
+    "@receipt":{
+        "description": " Receipt stock text - Home page"
+    },
+    "closingStock": "CLOSING STOCK",
+    "@closingStock":{
+        "description": " closing stock text - Home page"
+    },
+    "sales": "SALES",
+    "@sales":{
+        "description": " sales  text - Home page"
+    },
+    "reports": "REPORTS",
+    "@reports":{
+        "description": " reports  text - Home page"
+    },
+    "posEntry": "POS ENTRY",
+    "@posEntry":{
+        "description": " pos  text - Home page"
+    },
+    "viewOpeningPurchase":"view \n OB + Receipt",
+    "@viewOpeningPurchase":{
+        "description": "view \n Opening + Receipt - opening page"
+    },
+    "purchaseNotIncluded": "Opening Stock (Receipt not included)",
+    "@purchaseNotIncluded": {
+        "description": "Opening Stock (Receipt not included) - opening page"
+    },
+    "language": "Language",
+    "@language": {
+        "description": "Language"
+    },
+    "checkReminder": "Check Reminder",
+    "@checkReminder": {
+        "description": "Check Reminder"
+    },
+    "setReminder": "Set Reminder",
+        "@setReminder": {
+            "description": "Set Reminder"
+        },
+    "settings": "Settings",
+    "@settings": {
+        "description": "Settings"
+    },
+    "accessDate": "View Date",
+    "@accessDate": {
+        "description": "Access Date"
+    },
+    "setReminder": "Set Reminder",
+    "@setReminder": {
+        "description": "set reminder"
+    },
+    "masters": "Masters",
+    "@masters":{
+        "description":  "Masters"
+    },
+    "shop": "Shop",
+    "@shop": {
+        "description": "shop"
+    },
+    "shopName": "shop Name",
+    "@shopName": {
+        "description": "shopName"
+    },
+    "shopDetails": "shop Details",
+    "@shopDetails": {
+        "description": "shopDetails"
+    },
+    "staff": "Staff",
+    "@staff": {
+        "description": "staff"
+    },
+    "brand": "Brand",
+    "@brand": {
+        "description": "brand"
+    },
+    "category": "Category",
+    "@category": {
+        "description": "category"
+    },
+    "group": "Group",
+    "@group": {
+        "description": "group"
+    },
+    "size": "Size",
+    "@size": {
+        "description": "size"
+    },
+    "range": "Range",
+    "@range": {
+        "description": "range"
+    },
+    "backup": "Backup",
+    "@backup": {
+        "description": "backup"
+    },
+    "download": "Refresh",
+    "@download": {
+        "description": "download"
+    },
+    "addShop": "add Shop",
+    "@addShop": {
+        "description": "add shop"
+    },
+    "shopId": "Shop Id",
+    "@shopId": {
+        "description": "shop id"
+    },
+    "address": "Address",
+    "@address": {
+        "description": "address"
+    },
+    "street": "Street",
+    "@street": {
+        "description": "street"
+    },
+    "city": "City",
+    "@city": {
+        "description": "city"
+    },
+    "district": "District",
+    "@district": {
+        "description": "district"
+    },
+    "zipCode": "Zip Code",
+    "@zipCode":{
+        "description": "zip code"
+    },
+    "submit": "Submit",
+    "@submit": {
+        "description": "submit"
+    },
+    "salesManName": "Name",
+    "@salesManName": {
+        "description": "enter sales man name "
+    },
+    "mobileNumber": "Mobile Number",
+    "@mobileNumber": {
+        "description": "enter mobile number"
+    },
+    "add": "ADD",
+    "@add": {
+        "description": "add in sales man input page"
+    },
+    "newBrand": "New Brand",
+    "@newBrand": {
+        "description": "add new brand"
+    },
+    "filter": "Filter",
+    "@filter": {
+        "description": "filter text"
+    },
+    "edit": "Edit",
+    "@edit": {
+        "description": "edit"
+    },
+    "delete": "Delete",
+    "@delete": {
+        "description": "delete"
+    },
+    "addGroup": "Add Group",
+    "@addGroup": {
+        "description": "add group button"
+    },
+    "addNewGroup": "Add New Group",
+    "@addNewGroup": {
+        "description": "add new group"
+    },
+    "addCategory": "Add Category",
+    "@addCategory" : {
+        "description": "Add Category"
+    },
+    "addNewCategory": "Add New Category",
+    "@addNewCategory": {
+        "description": "addNewCategory"
+    },
+    "addSize": "Add Size",
+    "@addSize": {
+        "description": "add size"
+    },
+    "addSizeInMl":"Add Size In ml",
+    "@addSizeInMl": {
+        "description": "add new size in ml"
+    },
+    "addRange": "Add Range",
+    "@addRange": {
+        "description": "add range"
+    },
+    "addNewRange": "Add Range",
+    "@addNewRange": {
+        "description": "add new range"
+    },
+    "userAccess": "User Access",
+    "@userAccess": {
+        "description": "user Access"
+    },
+    "updatedOn": "Updated On",
+    "@updatedOn": {
+        "description":"txt"
+    },
+    "applyFilter": "Apply Filter",
+    "@applyFilter": {
+        "description": "apply filter in brand filter page "
+    },
+    "purchase": "Purchase",
+    "@purchase": {
+        "description": " Purchase in Purchase page"
+    },
+    "addPurchase": "Add Purchase",
+    "@addPurchase": {
+        "description": "add Purchase in Purchase page"
+    },
+    "addNewPurchase": "Add New Purchase",
+    "@addNewPurchase": {
+        "description": "add new purchase"
+    },
+    "searchTheProductAbove": "Search The Product Above",
+    "@searchTheProductAbove": {
+        "description": " select the product"
+    },
+    "caseCannotBeEmpty": "Case Can't Be Empty",
+    "@caseCannotBeEmpty": {
+        "description": "error message "
+    },
+    "enterCase": "Enter Case",
+    "@enterCase": {
+        "description": "enter case"
+    },
+    "bottleCannotBeEmpty": "Bottles Can't Be Empty",
+    "@bottleCannotBeEmpty": {
+        "description": "error message"
+    },
+    "enterBottles": "Enter Bottles",
+    "@enterBottles": {
+        "description": "enter bottle"
+    },
+    "someValuesAreWrong": "Some Values Are Wrong",
+    "@someValuesAreWrong": {
+        "description": "error message"
+    },
+    "alreadyEntered": "Already Entered",
+    "@alreadyEntered": {
+        "description": "message"
+    },
+    "enterInvoiceNo": "Enter Invoice No",
+    "@enterInvoiceNo": {
+        "description":"text field hint"
+    },
+    "selectAItem": "Select A Item",
+    "@selectAItem": {
+        "description": "text for select an item"
+    },
+    "save": "Save",
+    "@save": {
+        "description":"save text"
+    },
+    "activeAndInactiveBrand": "Active & Inactive Brand",
+    "@activeAndInactiveBrand": {
+        "description": "message for the brand state"
+    },
+    "checkInternetConnection": "Check Internet Connection",
+    "@checkInternetConnection":{
+        "description": "check Internet"
+    },
+    "invoiceValue": "Invoice Value",
+    "@invoiceValue": {
+        "description": "invoice Value"
+    },
+    "doYouWantToDelete": "Do You Want To Delete ?",
+    "@doYouWantToDelete": {
+        "description": "message text"
+    },
+    "currentInventoryShouldNotBeNegative": "Current Inventory Should Not Be Negative",
+    "@currentInventoryShouldNotBeNegative": {
+        "description": "negative error"
+    },
+    "noInternetConnection": "No Internet Connection",
+    "@noInternetConnection": {
+        "description": "internet error"
+    },
+    "search": "Search",
+    "@search": {
+        "description": "search text"
+    },
+    "case1": "Case: ",
+    "@case1": {
+        "description": "case one"
+    },
+    "bottle": "Bottle: ",
+    "@bottle": {
+        "description": "bottle"
+    },
+    "totBottle": "Tot Bottles: ",
+    "@totBottle": {
+        "description": "total Bottle"
+    },
+    "rs": "Rs.",
+    "@rs":{
+        "description": "Rs text"
+    },
+    "noDataFound": "No Details Found",
+    "@noDataFound": {
+        "description": "error msg"
+    },
+    "lastItem": "Last Item",
+    "@lastItem": {
+        "description":"last item"
+    },
+    "firstItem": "First Item",
+    "@FirstItem": {
+        "description": "First item"
+    },
+    "alreadyEnteredDoYouWantToUpdate": "Already Entered Do You Want To Update ?",
+    "@alreadyEnteredDoYouWantToUpdate": {
+        "description": "closing overWrite firebase message"
+    },
+    "product": "Product",
+    "@product": {
+        "description": "product"
+    },
+    "selectItem": "Select Item",
+    "@selectItem": {
+        "description": "Select item"
+    },
+    "back": "Back",
+    "@back": {
+        "description": "back btn txt"
+    },
+    "saveAndNext": "Save & Next",
+    "@saveAndNext": {
+        "description": "btn txt"
+    },
+    "enterValidNumber": "Enter Valid Number",
+    "@enterValidNumber": {
+        "description": "txt for product id , price, number input fields"
+    },
+    "pleaseVerifyThatYouAreUpdatingCorrectDate": "Please Verify That You Are Updating Correct Date",
+    "@pleaseVerifyThatYouAreUpdatingCorrectDate": {
+        "description": "check the date "
+    },
+    "update": "Update",
+    "@update": {
+        "description": "Update"
+    },
+    "pdfDownloadFailed": "Pdf Download Failed",
+    "@pdfDownloadFiled": {
+        "description": "txt"
+    },
+    "finalSubmission": "Final Submission",
+    "@finalSubmission": {
+        "description": "session lock"
+    },
+    "reportNotes": "To view the latest updated report, please connect to the internet.",
+    "@reportNotes": {
+        "description": "note in report page "
+    },
+    "note": "Note",
+    "@Note": {
+        "description": "note"
+    },
+    "detail":"Detail",
+    "@detail": {
+        "description": "detail"
+    },
+    "sms": "SMS",
+    "@sms":{
+        "description": "sms"
+    },
+    "graph": "Graph",
+    "@graph": {
+        "description": "graph"
+    },
+    "today": "Today",
+    "@today": {
+        "description":"txt"
+    },
+    "previousDay": "Previous Day",
+    "@previousDay":{
+        "description": "txt"
+    },
+    "cumulative": "Cumulative",
+    "@cumulative": {
+        "description": "txt"
+    },
+    "price": "Price",
+    "@price": {
+       "description": "txt"
+    },
+    "dataBackUpLocated": "Data Backup Located",
+    "@dataBackupLocated": {
+        "description": "txt"
+    },
+    "dataBackupTxt": "Before entering new data, please ensure you download the cloud data.",
+    "@dataBackupTxt": {
+        "description": "txt"
+    },
+    "dataAlreadyExist": "Data Already Exist",
+    "@dataAlreadyExist": {
+        "description": "description"
+    },
+    "alreadyExist": "Already Exist",
+    "@alreadyExist": {
+        "description": "txt"
+    },
+    "newPos": "New POS",
+    "@newPos": {
+        "description": "description"
+    },
+    "editPos": "Edit POS",
+    "@editPos": {
+        "description": "description"
+    },
+    "posDetails": "POS Details",
+    "@posDetails": {
+        "description": "description"
+    },
+    "previousDaysCumulative": "Previous Days Cumulative",
+    "@previousDaysCumulative": {
+        "description": "description"
+    },
+    "yes": "Yes",
+    "@yes": {
+        "description": "description"
+    },
+    "no": "No",
+    "@no": {
+        "description": "description"
+    },
+    "ok": "Ok",
+    "@ok": {
+        "description": "description"
+    },
+    "selectLanguage": "Select Language",
+    "@selectLanguage": {
+        "description": "description"
+    },
+    "disableBrandTxt": "The user is allowed to disable the item when there is no stock available.",
+    "@disableBrandTxt": {
+        "description": "description"
+    },
+    "processing": "Processing...",
+    "@processing": {
+        "description": "description"
+    },
+    "somethingWentWrong": "Something Went Wrong",
+    "@somethingWentWrong": {
+        "description": "description"
+    },
+    "editProduct":"Edit Product",
+    "@editProduct": {
+        "description": "description"
+    },
+    "idCannotBeEmpty": "Id Can't",
+    "@idCannotBeEmpty": {
+        "description": "description"
+    },
+    "enterId": "Enter Id",
+    "@enterId": {
+        "description": "description"
+    },
+    "brandCannotBeEmpty": "Brand Can't Be Empty",
+    "@brandCannotBeEmpty": {
+        "description": "description"
+    },
+    "effectiveFrom": "Effective From",
+    "@effectiveForm": {
+        "description": "description"
+    },
+    "selectAnItem": "Select an Item",
+    "@SelectAnItem": {
+        "description": "description"
+    },
+    "selectAllTheFields": "Select All The Fields",
+    "@selectAllTheFields": {
+        "description": "description"
+    },
+    "units": "Units",
+    "@units": {
+        "description": "description"
+    },
+    "enterANumber": "Enter A Number",
+    "@enterANumber": {
+        "description": "description"
+    },
+    "itemAddedSuccessfully": "Item Added Successfully",
+    "@itemAddedSuccessfully": {
+        "description": "description"
+    },
+    "newProduct": "New Product",
+    "@newProduct": {
+        "description": "description"
+    },
+    "productId": "product ID",
+    "@productId": {
+        "description": "description"
+    },
+    "enterProductId": "Enter Product ID",
+    "@enterProductId": {
+        "description": "description"
+    },
+    "enterBrand": "Enter Brand",
+    "@enterBrand": {
+        "description": "description"
+    },
+    "enterHowManyBottlePerCase": "Enter How Many Bottles Per Case",
+    "@enterHowManyBottlePerCase": {
+        "description": "description"
+    },
+    "productIdAlreadyExist": "Product Id Already Exist",
+    "@productIdAlreadyExist": {
+        "description": "description"
+    },
+    "enable": "Enable",
+    "@enable": {
+        "description": "description"
+    },
+    "sno": "S.No",
+    "@sno": {
+        "description": "description"
+    },
+    "enterBrandName": "Enter Brand Name",
+    "@enterBrandName": {
+        "description": "description"
+    },
+    "actions": "Actions",
+    "@actions": {
+        "description": "description"
+    },
+    "doYouWantToContinue": "Do You Want To Continue ?",
+    "@doYouWantToContinue": {
+        "description": "description"
+    },
+    "waitingForBackup": "Waiting For Backup...",
+    "@waitingForBackup": {
+        "description": "description"
+    },
+    "backupInProgress":"Refreshing...",
+    "@backupInProgress": {
+        "description": "description"
+    },
+    "backupSuccessFul": "Backup Successful",
+    "@backupSuccessFul": {
+        "description": "description"
+    },
+    "waitingForDownload": "Waiting For Download...",
+    "@waitingForDownload": {
+        "description": "description"
+    },
+    "downloadInProgress": "Refreshing...",
+    "@downloadInProgress": {
+        "description": "description"
+    },
+    "downloadedSuccessful": "Downloaded Successful",
+    "@downloadedSuccessful": {
+        "description": "description"
+    },
+    "cancelDownload": "Refreshing in Progress Do you Want to Cancel",
+    "@cancelDownload": {
+        "description": "description"
+    },
+    "myReminders": "My Reminders",
+    "@myReminders": {
+        "description": "description"
+    },
+    "noReminderNote": "No Reminder Notes",
+    "@noReminderNote": {
+        "description": "description"
+    },
+    "todayDate": "Today Date",
+    "@todayDate": {
+        "description": "description"
+    },
+    "accessDates": "Access Date",
+    "@accessDates": {
+        "description": "description"
+    },
+    "appAccessDate": "App View Date",
+    "@appAccessDate": {
+        "description": "description"
+    },
+    "enterReminderNote": "Enter Reminder Note",
+    "@enterReminderNote": {
+        "description": "description"
+    },
+    "enterReminderHere": "Enter Reminder here...",
+    "@enterReminderHere": {
+        "description": "description"
+    },
+    "cancel": "Cancel",
+    "@cancel": {
+        "description": "description"
+    },
+    "profile": "Profile",
+    "@profile": {
+        "description": "description"
+    },
+    "name": "Name",
+    "@name": {
+        "description": "description"
+    },
+    "attendanceReport": "Attendance Report",
+    "@attendanceReport": {
+        "description": "description"
+    },
+    "from": "From",
+    "@from": {
+        "description": "description"
+    },
+    "to": "TO",
+    "@to": {
+        "description": "description"
+    },
+    "date": "Date",
+    "@date": {
+        "description": "description"
+    },
+    "salesMan": "Sales Man",
+    "@salesMan": {
+        "description": "description"
+    },
+    "inCharge": "In Charge",
+    "@inCharge": {
+        "description": "description"
+    },
+    "opStockRs": "OP Stock : Rs ",
+    "@opStockRs": {
+        "description": "description"
+    },
+    "purchaseRs": "Purchase : Rs ",
+    "@purchaseRs": {
+        "description": "description"
+    },
+    "actualStockRs": "Actual Stock : Rs ",
+    "@actualStockRs": {
+        "description": "description"
+    },
+    "closingStockRs": "Closing Stock : Rs ",
+    "@closingStockRs": {
+        "description": "description"
+    },
+    "salesRs": "Sales : Rs ",
+    "@salesRs": {
+        "description": "description"
+    },
+    "consolidateReport": "Consolidate Report",
+    "@consolidateReport": {
+        "description": "description"
+    },
+    "opBottlesQty": "OP Btls Qty : ",
+    "@opBottlesQty": {
+        "description": "description"
+    },
+    "purchaseBottlesQty" : "Purchase Btls Qty : ",
+    "@purchaseBottlesQty": {
+        "description": "description"
+    },
+    "actualBottlesQty": "Actual Btls Qty : ",
+    "@actualBottlesQty": {
+        "description": "description"
+    },
+    "closingBottlesQty": "Closing Btls Qty : ",
+    "@closingBottlesQty": {
+        "description": "description"
+    },
+    "salesBottlesQty": "Sales Btls Qty : ",
+    "@salesBottlesQty": {
+        "description": "description"
+    },
+    "bottleQty": "Bottles Qty",
+    "@bottleQty": {
+        "description": "description"
+    },
+    "totalPrice": "Total Price",
+    "@totalPrice": {
+        "description": "description"
+    },
+    "detailedReport":"Detailed Report",
+    "@detailedReport": {
+        "description": "description"
+    },
+    "manual": "Manual",
+    "@manual": {
+        "description": "manual"
+    },
+    "enterPrice": "Enter Price",
+    "@enterPrice": {
+        "description": "description"
+    },
+    "currentStock": "Current Stock",
+    "@currentStock": {
+        "description": "description"
+    },
+    "valueRs": "Value : Rs",
+    "@valueRs": {
+        "description": "description"
+    },
+    "value": "Value",
+    "@value": {
+        "description": "description"
+    },
+    "posDate": "Pos Date",
+    "@posDate": {
+        "description": "description"
+    },
+    "addPos": "Add Pos",
+    "@addPos": {
+        "description": "description"
+    },
+    "ob": "OB",
+    "@ob": {
+        "description": "description"
+    },
+    "invNo": "Inv No:",
+    "@invNo": {
+        "description": "description"
+    },
+    "invoiceValueRs": "Invoice Value :\n Rs.",
+    "@invoiceValueRs": {
+        "description": "description"
+    },
+    "purchaseInvoice": "Purchase Invoice",
+    "@purchaseInvoice": {
+        "description": "description"
+    },
+    "updated": "Updated",
+    "@updated": {
+        "description": "description"
+    },
+    "successfully": "\nSuccessfully",
+    "@successfully": {
+        "description": "description"
+    },
+    "invalidInput": "Invalid Input",
+    "@invalidInput": {
+        "description": "description"
+    },
+    "pleaseProvideValidValue": "Please Provide Valid  Value",
+    "@pleaseProvideValidValue": {
+        "description": "description"
+    },
+    "editInward": "Edit Inward",
+    "@editInward": {
+        "description": "description"
+    },
+    "invoiceDate":"Invoice date",
+    "@invoiceDate": {
+        "description": "description"
+    },
+    "selectDate": "SELECT DATE",
+    "@selectDate": {
+        "description": "description"
+    },
+    "pleaseCheckYourInternetConnectionTryAgain": "Please Check Your Internet Connection and Try Again",
+    "@pleaseCheckYourInternetConnectionTryAgain": {
+        "description": "description"
+    },
+    "profileUpdatedSuccessfully":"Profile Updated Successfully.",
+    "@profileUpdatedSuccessfully": {
+        "description": "description"
+    },
+    "informToSupervisor": "Final Submission",
+    "@informToSupervisor": {
+        "description": "description"
+    },
+    "addSalesMan": "Add Sales Man",
+    "@addSalesMan": {
+        "description": "description"
+    },
+    "enterSalesManName": "Enter Sales Man Name",
+    "@enterSalesManName": {
+        "description": "description"
+    },
+    "enterMobileNumber": "Enter Mobile Number",
+    "@enterMobileNumber": {
+        "description": "description"
+    },
+    "mobileNumberTenCharacter": "Mobile number must be 10 characters long",
+    "@mobileNumberTenCharacter": {
+        "description": "description"
+    },
+    "temporaryUser":"Temporary User",
+    "@temporaryUser": {
+        "description": "description"
+    },
+    "thisUserOnlyAvailableTemporary": "This user is only available temporary.",
+    "@thisUserOnlyAvailableTemporary": {
+        "description": "description"
+    },
+    "salesManAddedSuccessfully": "Sales Man Added Successfully",
+    "@salesManAddedSuccessfully": {
+        "description": "description"
+    },
+    "mySalesMan":"My Sales Man",
+    "@mySalesMan": {
+        "description": "description"
+    },
+    "noSalesManFound": "No Sales Man Found",
+    "@noSalesManFound": {
+        "description": "description"
+    },
+    "confirm": "Confirm",
+    "@confirm": {
+        "description": "description"
+    },
+    "deletePhoneNumber": "Are you sure do you want to delete this {phoneNumber} sales man?",
+    "@deletePhoneNumber": {
+        "description": "description",
+        "placeholders": {
+            "phoneNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "mrp": "MRP",
+    "@mrp": {
+        "description": "description"
+    },
+    "attendance": "Today CB Entry Person",
+    "@attendance": {
+        "description": "description"
+    },
+    "attendanceList": "Attendance List",
+    "@attendanceList": {
+        "description": "description"
+    },
+    "entryBy": "Entry By",
+    "@entryBy": {
+        "description": "description"
+    },
+    "dataSubmittedSuccessfully": "Data Submitted Successfully",
+    "@dataSubmittedSuccessfully": {
+        "description": "description"
+    },
+    "itWillTakeFewSeconds": "Sit and Relax...\nWe are preparing your Sales Report,\nIt Will Take a Few Seconds...",
+    "@itWillTakeFewSeconds": {
+        "description": "description"
+    },
+    "done": "Done",
+    "@done": {
+        "description": "description"
+    },
+    "bottlePerCase": "Bottle Per Case",
+    "@bottlePerCase": {
+        "description": "description"
+    },
+    "logout": "Logout",
+    "@logout": {
+        "description": "description"
+    },
+    "addFilter": "Add Filter",
+    "@addFilter": {
+        "description": "description"
+    },
+    "noData": "No Data",
+    "@noData": {
+        "description": "description"
+    },
+    "lastClosingTodayOpening":"Consider my Last Day Closing Stock is Selected Date opening Stock",
+    "@lastClosingTodayOpening": {
+        "description": "description"
+    },
+    "alert": "Alert",
+    "@alert": {
+        "description": "description"
+    },
+    "theDatabaseIsEmpty":"The Database is Empty",
+    "@theDatabaseIsEmpty": {
+        "description": "description"
+    },
+    "youAreUpToDate": "You Are Up to Date",
+    "@youAreUpToDate": {
+        "description": "description"
+    },
+    "todaySessionClosed": "Report Submitted Successfully",
+    "@todaySessionClosed": {
+        "description": "description"
+    },
+    "valueShouldNotBeNegative": "Value Should Not Be Negative ?",
+    "@valuesShouldNotBeNegative": {
+        "description": "description"
+    },
+    "alreadyUpdated":"Already Updated",
+    "@alreadyUpdated": {
+        "description": "description"
+    },
+    "replaceExistingFile": "Do you want to Update again?",
+    "@replaceExistingFile": {
+        "description": "description"
+    },
+    "itemName": "Item Name",
+    "@itemName": {
+        "description": "description"
+    },
+    "belowItemsNotFilled": "Below Items Not Filled",
+    "@belowItemsNotFilled": {
+        "description": "description"
+    },
+    "lockTodaySession": "Lock Today Session",
+    "@lockTodaySession": {
+        "description": "description"
+    },
+    "pressYesToLockTodaySession": "Entry Completed.\nReport Will Submitted to Supervisor.",
+    "@pressYesToLockTodaySession": {
+        "description": "description"
+    },
+    "todaySessionIsOpen": "Today Session is Open",
+    "@todaySessionIsOpen": {
+        "description": "description"
+    },
+    "todaySessionIsClosed": "Report Submitted",
+    "@todaySessionIsClosed": {
+        "description": "description"
+    },
+    "unlock": "Edit",
+    "@unlock": {
+        "description": "description"
+    },
+    "somethingWentWrongPleaseTryAgain": "Something Went Wrong Please Try Again",
+    "@somethingWentWrongPleaseTryAgain": {
+        "description": "description"
+    },
+    "pleaseNote": "Please Note",
+    "@pleaseNote": {
+        "description": "description"
+    },
+    "noBrandDataAvailable": "No Brand Data Available",
+    "@noBrandDataAvailable": {
+        "description": "description"
+    },
+    "belowItemNotFilledBundleRetailIsZeroPressYes": "Below Items Not Filled ?\nBundle & Retail is 0 Press 'Yes'",
+    "@belowItemsNotFilledBundleRetailIsZeroPressYes": {
+        "description": "description"
+    },
+    "pdf": "PDF",
+    "@pdf": {
+        "description": "pdf"
+    },
+    "view": "View",
+    "@view":{
+     "description": "view"
+    },
+    "start": "Start",
+    "@start":{
+     "description": "start"
+    },
+    "cb": "CB",
+    "@cb":{
+     "description": "cb"
+    },
+    "refresh": "Refresh",
+    "@refresh":{
+     "description": "refresh"
+    },
+    "resetPassword": "Reset\nPassword",
+    "@resetPassword":{
+     "description": "resetPassword"
+    },
+    "total": "TOTAL",
+    "@total":{
+     "description": "total"
+    }
+}
