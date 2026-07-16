@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
+import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
+import 'package:stock_app_web/core/utils/guid_video_links.dart';
 import 'package:stock_app_web/core/widgets/drawer_tail.dart';
+import 'package:stock_app_web/core/widgets/logout_popup.dart';
+import 'package:web/web.dart' as web;
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -18,8 +23,11 @@ class AppDrawer extends StatelessWidget {
           DrawerListTail(
             title: 'HOME PAGE',
             icon: Icons.home,
-            onTap: () {
-              context.go(AppRoutes.home);
+            onTap: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.home}');
+              }
             },
           ),
           Container(height: 1, color: Colors.black12),
@@ -27,37 +35,65 @@ class AppDrawer extends StatelessWidget {
             title: 'VIEW DATE',
             icon: Icons.date_range,
             onTap: () async {
-              context.go(AppRoutes.viewDate);
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.viewDate}');
+              }
             },
           ),
           Container(height: 1, color: Colors.black12),
           DrawerListTail(
             title: "BRAND",
             icon: Icons.pending_actions_rounded,
-            onTap: () async {},
+            onTap: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.brandStock}');
+              }
+            },
           ),
           Container(height: 1, color: Colors.black12),
           DrawerListTail(
             title: 'Settings',
             icon: Icons.settings,
-            onTap: () async {},
+            onTap: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.settings}');
+              }
+            },
           ),
           Container(height: 1, color: Colors.black12),
           DrawerListTail(
             title: 'Support',
             icon: Icons.phone,
             iconColor: Colors.pink,
-            onTap: () {},
+            onTap: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.supportPage}');
+              }
+            },
           ),
           Container(height: 1, color: Colors.black12),
           DrawerListTail(
             title: 'Guide',
             icon: Icons.play_circle_fill_outlined,
             iconColor: Colors.red,
-            onTap: () {},
+            onTap: () {
+              print('youtubeUrl $stockChittaPage');
+              final Uri youtubeUrl = Uri.parse(stockChittaPage);
+              web.window.open(youtubeUrl.toString(), '_blank');
+            },
           ),
           Container(height: 1, color: Colors.black12),
-          DrawerListTail(title: 'Logout', icon: Icons.logout, onTap: () {}),
+          DrawerListTail(
+            title: 'Logout',
+            icon: Icons.logout,
+            onTap: () {
+              logOutPopup(context);
+            },
+          ),
           Container(height: 1, color: Colors.black12),
         ],
       ),

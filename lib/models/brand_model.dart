@@ -68,4 +68,23 @@ class BrandModel {
       buyingPrice: (map['buyingPrice'] as num).toDouble(),
     );
   }
+
+  factory BrandModel.fromMapForOldData(Map<String, dynamic> map) {
+    return BrandModel(
+      id: map['id'],
+      date: map['date'],
+      time: map['time'],
+      productId: map['productId'],
+      brand: map['brand'],
+      category: map['category'],
+      size: map['size'],
+      groups: map['brandGroup'],
+      range: map['range'],
+      price: map['price'],
+      bottlePerBundle: map['bottlePerBundle'],
+      isSynced: map['isSynced'],
+      isActive: map['isActive'],
+      buyingPrice: (map['buyingPrice'] as num).toDouble(),
+    );
+  }
 }

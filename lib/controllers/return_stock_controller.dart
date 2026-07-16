@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/brand_firestore_repo.dart';
 import 'package:stock_app_web/core/repositories/firestore_repo.dart';
 import 'package:stock_app_web/models/brand_model.dart';
 import 'package:stock_app_web/models/return_model.dart';
 
 class ReturnStockController {
   final _fireRepo = getIt<FirestoreRepo>();
+  final _brandFirestoreRepo = getIt<BrandFirestoreRepo>();
 
   Future<List<ReturnViewModel>> getAllReturnStock(
     String shopId,
@@ -27,7 +29,9 @@ class ReturnStockController {
 
     print('returnStock map $maps, date $date');
 
-    List<BrandModel> brandData = await _fireRepo.getBrandCollection(shopId);
+    List<BrandModel> brandData = await _brandFirestoreRepo.getBrandCollection(
+      shopId,
+    );
 
     try {
       maps.forEach((key, value) {

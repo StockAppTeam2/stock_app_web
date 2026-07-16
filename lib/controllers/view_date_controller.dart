@@ -16,13 +16,23 @@ class ViewDateController {
   final int maxDocs = 45;
 
   Future<String> getViewDateForUi() async {
-    String viewDate = await cacheRepo.getStringCache(key: 'viewDateUi');
+    String viewDate = await cacheRepo.getStringCacheLocalAndFirebase(
+      key: 'viewDateUi',
+    );
 
     return viewDate;
   }
 
   Future<void> setViewDate(String date) async {
-    await cacheRepo.addStringCache('viewDateUi', date);
+    await cacheRepo.addStringCacheLocalAndFirebase('viewDateUi', date);
+  }
+
+  Future<String> getMobileNumber() async {
+    String viewDate = await cacheRepo.getStringCacheLocalAndFirebase(
+      key: 'mobile_number',
+    );
+
+    return viewDate;
   }
 
   Future<List<String>> getDates(String? lastDate, int pageSize) async {

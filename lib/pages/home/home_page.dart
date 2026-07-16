@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/home_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/constants/app_assets.dart';
 import 'package:stock_app_web/core/constants/pages_card_colors.dart';
@@ -10,6 +11,7 @@ import 'package:stock_app_web/core/utils/format_date.dart';
 import 'package:stock_app_web/core/utils/responsive.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/pages/home/widgets/card_widget.dart';
+import 'package:stock_app_web/pages/home/widgets/first_opening_popup.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,8 +86,22 @@ class _HomePageState extends State<HomePage> {
                 color2: PagesCardColors.colour2[index],
                 icon: AppAssets.pagesImages[index],
                 name: PagesConstants.pagesList[index],
-                onTap: () {
-                  context.go(PagesConstants.pagesRouteList[index]);
+                onTap: () async {
+                  bool isFirstOpening = await homePageController
+                      .checkFirstOpening();
+                  if (isFirstOpening) {
+                    if (context.mounted) {
+                      firstOpeningPopup(context);
+                    }
+                  } else {
+                    String shopId = await getIt<ShopIdController>().getShopId();
+                    print('shopId HomePage: $shopId');
+                    if (context.mounted) {
+                      context.go(
+                        '/$shopId/${PagesConstants.pagesRouteList[index]}',
+                      );
+                    }
+                  }
                 },
               );
             },

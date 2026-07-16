@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CacheService {
+class LocalCacheService {
   Future<void> addStringCache({
     required String key,
     required String value,

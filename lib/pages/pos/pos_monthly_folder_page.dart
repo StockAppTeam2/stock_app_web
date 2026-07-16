@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:stock_app_web/controllers/pos_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
@@ -80,7 +79,8 @@ class _PosMonthlyFolderPageState extends State<PosMonthlyFolderPage> {
   }
 
   Future<List<String>> getPosDates() async {
-    List<String> posMonths = await posController.getPosMonths('3810');
+    String shopId = await getIt<ShopIdController>().getShopId();
+    List<String> posMonths = await posController.getPosMonths(shopId);
 
     return posMonths.reversed.toList();
   }

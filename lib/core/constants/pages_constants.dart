@@ -19,8 +19,7 @@ class PagesConstants {
 
   static const List pagesRouteList = [
     AppRoutes.openingViewType,
-    // AppRoutes.receiptMonthlyFolder,
-    AppRoutes.receiptStock,
+    AppRoutes.receiptMonthlyFolder,
     AppRoutes.closingViewType,
     AppRoutes.salesStock,
     AppRoutes.report,

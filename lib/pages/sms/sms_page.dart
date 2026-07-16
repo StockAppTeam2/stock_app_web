@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/sms_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
@@ -121,13 +122,16 @@ class _SmsPageState extends State<SmsPage> {
   }
 
   Future<List<dynamic>> getData() async {
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<List<dynamic>> oneDayReport = await smsController.oneDayCalc();
     print("oneDayReport $oneDayReport");
 
     List<List<dynamic>> arrangedList = [];
     String textSms = '';
     List<dynamic> smsList = [];
-    List<dynamic> orderList = await smsController.getSmsFormat(3810);
+    List<dynamic> orderList = await smsController.getSmsFormat(
+      int.parse(shopId),
+    );
     print('orderListss $orderList');
 
     for (final order in orderList[0]) {

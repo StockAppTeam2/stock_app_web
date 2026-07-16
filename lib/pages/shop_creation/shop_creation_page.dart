@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/login_page_controller.dart';
 import 'package:stock_app_web/core/constants/app_assets.dart';
 import 'package:stock_app_web/core/constants/app_constants.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/cache_repository.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/utils/dialog_helper.dart';
 import 'package:stock_app_web/core/utils/network_helper.dart';
@@ -18,6 +20,7 @@ class ShopCreationPage extends StatefulWidget {
 
 class _ShopCreationPageState extends State<ShopCreationPage> {
   final loginPageController = getIt<LoginPageController>();
+  final _cache = getIt<CacheRepository>();
 
   final _formKey = GlobalKey<FormState>();
   final mobileController = TextEditingController();
@@ -64,13 +67,18 @@ class _ShopCreationPageState extends State<ShopCreationPage> {
         return;
       }
 
+      String currentDate = DateTime.now().toString().substring(0, 10);
+      await _cache.addStringCacheLocalAndFirebase('viewDateUi', currentDate);
+      await _cache.addStringCacheLocalAndFirebase('shopId', shopNumber);
+      await _cache.addStringCacheLocalAndFirebase('mobile_number', shopNumber);
       await loginPageController.addNewUser(mobile, shopNumber, place);
       setState(() {
         loading = false;
       });
 
       if (!context.mounted) return;
-      // Navigator.pushReplacementNamed(context, AppRoutes.home);
+      context.go('/$shopNumber/${AppRoutes.home}');
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
     } catch (e) {
       if (!context.mounted) return;
       DialogHelper.showError(context, 'Something went wrong.\n$e');

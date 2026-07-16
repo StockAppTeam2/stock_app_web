@@ -7,6 +7,7 @@ import 'package:stock_app_web/controllers/receipt_controller.dart';
 import 'package:stock_app_web/controllers/return_stock_controller.dart';
 import 'package:stock_app_web/controllers/sales_cumulative_controller.dart';
 import 'package:stock_app_web/controllers/sales_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/utils/guid_video_links.dart';
@@ -14,7 +15,6 @@ import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
 import 'package:stock_app_web/models/inward_table_model.dart';
 import 'package:stock_app_web/models/items_table_model.dart';
-import 'package:stock_app_web/models/pos_model.dart';
 import 'package:stock_app_web/models/previous_year_sales_cumulative.dart';
 import 'package:stock_app_web/models/return_model.dart';
 import 'package:stock_app_web/models/sales_table_model.dart';
@@ -623,11 +623,11 @@ class _Form49PageState extends State<Form49Page> {
       allData[13] = salesValues[9];
       allData[14] = salesValues[10];
       allData[49] = salesValues[11];
-
+      String shopId = await getIt<ShopIdController>().getShopId();
       List<int> bankRemittances = await bankRemittance(
         salesValues[10],
         viewDate,
-        '3810',
+        shopId,
       );
       allData[15] = bankRemittances[0];
       allData[16] = bankRemittances[1];
@@ -686,20 +686,16 @@ class _Form49PageState extends State<Form49Page> {
 
   Future<List<int>> shopIdDateContact() async {
     List<int> shopDetails = List.filled(1, 0);
-    shopDetails[0] = 3810;
+    String shopId = await getIt<ShopIdController>().getShopId();
+    shopDetails[0] = int.parse(shopId);
     return shopDetails;
-    // if (shopId != null) {
-    //   shopDetails[0] = shopId!;
-    //   return shopDetails;
-    // } else {
-    //   return [0];
-    // }
   }
 
   Future<List<int>> salesAllCalculations(String date) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<SalesViewModel> salesData = await _salesController.getSalesData(
       date,
-      '3810',
+      shopId,
     );
     List<int> salesCalc = List.filled(12, 0);
 
@@ -854,8 +850,9 @@ class _Form49PageState extends State<Form49Page> {
   }
 
   Future<List<int>> closingAllCalculations(String date) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<ItemsViewModel> openCloseActual = await openingController
-        .getOpeningData(date, '3810');
+        .getOpeningData(date, shopId);
 
     List<int> cbCalc = List.filled(8, 0);
     int ordImflCBCases = await ordinaryImflCBCase(openCloseActual);
@@ -907,9 +904,10 @@ class _Form49PageState extends State<Form49Page> {
   }
 
   Future<List<int>> receiptAllCalculations(String date) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<InwardViewModel> inwardData = await inwardController.getInwardData(
       date,
-      '3810',
+      shopId,
     );
 
     List<int> inwardCalc = List.filled(7, 0);
@@ -950,8 +948,9 @@ class _Form49PageState extends State<Form49Page> {
   }
 
   Future<List> cumulative(DateTime date) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
     List cumulative = await salesCumulativeController
-        .salesCumulativeCalculation('3810', date);
+        .salesCumulativeCalculation(shopId, date);
     print('cumulativessss $cumulative');
     if (cumulative.length == 3) {
       return cumulative;
@@ -962,10 +961,11 @@ class _Form49PageState extends State<Form49Page> {
 
   Future<List> previousYearSalesCumulative(DateTime date) async {
     DateTime dateTime = DateTime(date.year - 1, date.month, date.day);
+    String shopId = await getIt<ShopIdController>().getShopId();
     PreviousYearSalesCumulativeModel? model =
         await previousYearSalesCumulativeController
             .readPreviousYearSalesCumulativeUsingDate(
-              '3810',
+              shopId,
               dateTime.toString().substring(0, 10),
             );
 
@@ -981,9 +981,9 @@ class _Form49PageState extends State<Form49Page> {
 
   Future<List> returnAllCalculations(DateTime date) async {
     List<int> returnData = List.filled(8, 0);
-
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<ReturnViewModel> returnStock = await returnStockController
-        .getAllReturnStock('3810', date.toString().substring(0, 10));
+        .getAllReturnStock(shopId, date.toString().substring(0, 10));
 
     int imflCases = 0;
     int beerCases = 0;

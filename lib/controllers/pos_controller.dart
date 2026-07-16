@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/services/firestore_service.dart';
 import 'package:stock_app_web/models/pos_model.dart';
@@ -42,11 +43,11 @@ class PosController {
     return snapshot.docs.map((doc) => NewPosModel.fromMap(doc.data())).toList();
   }
 
-  Future<List<String>> getPosMonths(String shopId) async {
+  Future<List<String>> getPosMonths(String docId) async {
     List<String> posMonths = [];
     final doc = await firestoreService.getDocument(
       collection: 'web_cache',
-      docId: '3810',
+      docId: docId,
     );
 
     if (doc.exists) {
@@ -67,7 +68,7 @@ class PosController {
           posMonths.add(currentMonth);
           await FirebaseFirestore.instance
               .collection('web_cache')
-              .doc('3810')
+              .doc(docId)
               .update({'posMonths': FieldValue.arrayUnion(posMonths)});
           return posMonths;
         }
@@ -76,11 +77,11 @@ class PosController {
 
     if (posMonths.isEmpty) {
       print('getPosMonths2');
-      List<String> months = await getAvailableMonths(shopId);
+      List<String> months = await getAvailableMonths(docId);
       print('months $months');
       await firestoreService.add(
         collection: 'web_cache',
-        docId: '3810',
+        docId: docId,
         data: {'posMonths': months},
       );
 
@@ -152,10 +153,10 @@ class PosController {
     print('called ffffffffffff');
     print('monthAndYear $monthAndYear');
     final range = getMonthRange(monthAndYear);
-
+    String shopId = await getIt<ShopIdController>().getShopId();
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('pos')
-        .doc('3810')
+        .doc(shopId)
         .collection('date')
         .where('posDate', isGreaterThanOrEqualTo: range['start'])
         .where('posDate', isLessThan: range['end'])

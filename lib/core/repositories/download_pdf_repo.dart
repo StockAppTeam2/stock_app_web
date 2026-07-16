@@ -1,22 +1,19 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:stock_app_web/controllers/pos_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/brand_firestore_repo.dart';
 import 'package:stock_app_web/core/repositories/firestore_repo.dart';
+import 'package:stock_app_web/core/repositories/opening_firestore_repo.dart';
+import 'package:stock_app_web/core/repositories/purchase_firestore_repo.dart';
+import 'package:stock_app_web/core/repositories/sales_firestore_repo.dart';
 import 'package:stock_app_web/core/utils/format_date.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:stock_app_web/models/brand_model.dart';
@@ -29,6 +26,10 @@ import 'package:universal_html/html.dart' as html;
 class DownloadPdfRepo {
   final _viewDateController = getIt<ViewDateController>();
   final _fireRepo = getIt<FirestoreRepo>();
+  final _brandFirestoreRepo = getIt<BrandFirestoreRepo>();
+  final _openingFirestoreRepo = getIt<OpeningFirestoreRepo>();
+  final _purchaseFirestoreRepo = getIt<PurchaseFirestoreRepo>();
+  final _salesFirestoreRepo = getIt<SalesFirestoreRepo>();
 
   Future<void> downloadEmptyPdf(
     BuildContext context,
@@ -6767,7 +6768,7 @@ class DownloadPdfRepo {
     //   'SELECT productId FROM brand ORDER BY id ASC',
     // );
 
-    List<BrandModel> brandData = await _fireRepo.getBrandCollection(
+    List<BrandModel> brandData = await _brandFirestoreRepo.getBrandCollection(
       shopId.toString(),
     );
     List<String> uniqueBrandGroups = await _fireRepo.getBrandDetails(
@@ -6786,19 +6787,17 @@ class DownloadPdfRepo {
       key: 'range',
     );
 
-    List<ItemsViewModel> itemsData = await _fireRepo.getOpeningDoc(
+    List<ItemsViewModel> itemsData = await _openingFirestoreRepo.getOpeningDoc(
       lastDate.toString(),
       '3810',
     );
     itemsDatas.addAll(itemsData);
-    List<SalesViewModel> salesData = await _fireRepo.getSalesDoc(
+    List<SalesViewModel> salesData = await _salesFirestoreRepo.getSalesDoc(
       lastDate.toString(),
       '3810',
     );
-    List<InwardViewModel> inwardData = await _fireRepo.getInwardDoc(
-      lastDate.toString(),
-      '3810',
-    );
+    List<InwardViewModel> inwardData = await _purchaseFirestoreRepo
+        .getInwardDoc(lastDate.toString(), '3810');
 
     //////////
     List<String> productIds = [];

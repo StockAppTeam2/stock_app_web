@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/receipt_controller.dart';
-import 'package:stock_app_web/controllers/view_date_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
 import 'package:stock_app_web/models/inward_table_model.dart';
 import 'package:stock_app_web/pages/receipt/receipt_product_cards.dart';
+import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 
 class ReceiptStockPage extends StatefulWidget {
-  const ReceiptStockPage({super.key});
+  final String date;
+
+  const ReceiptStockPage({super.key, required this.date});
 
   @override
   State<ReceiptStockPage> createState() => _ReceiptStockPageState();
 }
 
 class _ReceiptStockPageState extends State<ReceiptStockPage> {
-  final _viewDateController = getIt<ViewDateController>();
   final _receiptController = getIt<ReceiptController>();
 
-  String viewDate = '';
   String invoiceNo = '';
   String query = '';
+
+  bool allowEdit = false;
 
   late Future<List<InwardViewModel>> _future;
   List<InwardViewModel> filterData = [];
@@ -28,8 +33,7 @@ class _ReceiptStockPageState extends State<ReceiptStockPage> {
   @override
   void initState() {
     super.initState();
-    getViewDate();
-
+    enableEdit();
     _future = loadInwardData();
   }
 
@@ -48,7 +52,7 @@ class _ReceiptStockPageState extends State<ReceiptStockPage> {
           children: [
             PageHeader(
               title: 'Receipt',
-              viewDate: viewDate,
+              viewDate: widget.date,
               query: (String p1) {
                 print('p1 $p1');
                 setState(() {
@@ -166,23 +170,23 @@ class _ReceiptStockPageState extends State<ReceiptStockPage> {
                                             context: context,
                                             item: product,
                                             width: 100,
-                                            showMenu: false,
-                                            onEdit: () {},
-                                            onDelete: () {},
-                                            // showMenu:
-                                            //     userController.isManager ||
-                                            //     userController.isInCharge,
-                                            // onEdit: () {
-                                            //   _editItem(data[index], context);
-                                            // },
-                                            // onDelete: () {
-                                            //   _deleteItem(
-                                            //     data[index].id,
-                                            //     context,
-                                            //     data[index].productId,
-                                            //     data[index].date,
-                                            //   );
-                                            // },
+                                            showMenu: allowEdit,
+                                            onEdit: () async {
+                                              String shopId =
+                                                  await getIt<
+                                                        ShopIdController
+                                                      >()
+                                                      .getShopId();
+                                              if (context.mounted) {
+                                                context.go(
+                                                  '/$shopId/${AppRoutes.editReceiptStock}',
+                                                  extra: {'product': product},
+                                                );
+                                              }
+                                            },
+                                            onDelete: () {
+                                              deletePopup(context, product);
+                                            },
                                           ),
                                         ],
                                       ),
@@ -205,22 +209,18 @@ class _ReceiptStockPageState extends State<ReceiptStockPage> {
     );
   }
 
-  void getViewDate() async {
-    String value = await _viewDateController.getViewDateForUi();
-    print('viewdate: $value');
-    if (mounted) {
-      setState(() => viewDate = value);
-    }
-  }
-
   Future<List<InwardViewModel>> loadInwardData() async {
-    String value = await _viewDateController.getViewDateForUi();
-
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<InwardViewModel> data = await _receiptController.getInwardData(
-      value,
-      '3810',
+      widget.date,
+      shopId,
     );
     filterData = data;
+    if (data.isNotEmpty) {
+      setState(() {
+        invoiceNo = data.first.invoiceNo;
+      });
+    }
     print('loadInwardData ${data.length}');
 
     return data;
@@ -252,5 +252,51 @@ class _ReceiptStockPageState extends State<ReceiptStockPage> {
 
   void disposeDataInFuture() {
     _future = Future.value([]);
+  }
+
+  void enableEdit() async {
+    bool allow = await _receiptController.enableEdit(date: widget.date);
+    setState(() {
+      allowEdit = allow;
+    });
+  }
+
+  void deletePopup(BuildContext context, InwardViewModel product) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Do You Want To Delete The Product?'),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                await _receiptController.deleteReceipt(product);
+                if (!context.mounted) return;
+                Navigator.pop(context);
+
+                showSuccessToast('Item Deleted Successfully');
+                updateFuture();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

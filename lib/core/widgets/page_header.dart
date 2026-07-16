@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/opening_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/utils/format_date.dart';
@@ -143,6 +144,17 @@ class PageHeader extends StatelessWidget {
             icon: Icons.receipt_long,
             onPressed: () {
               //
+            },
+          ),
+        if (page == 'brand_stock')
+          AppButton(
+            title: "Add New Brand",
+            icon: Icons.receipt_long,
+            onPressed: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.addBrandStock}');
+              }
             },
           ),
         if (videoLink != '') YoutubeButton(url: videoLink),

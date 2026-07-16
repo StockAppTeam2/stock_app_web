@@ -149,4 +149,9 @@ class LoginPageController {
       posData,
     );
   }
+
+  Future<String> getShopIdUsingPhoneNumber(String phone) async {
+    String shopId = await _userRepo.getShopIdInFirebase(phone);
+    return shopId;
+  }
 }

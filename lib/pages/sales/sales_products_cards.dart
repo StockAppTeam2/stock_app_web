@@ -5,7 +5,6 @@ Widget buildTotalCard({
   required BuildContext context,
   required SalesViewModel item,
   required double width,
-  required bool showMenu,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
 }) {
@@ -21,7 +20,9 @@ Widget buildTotalCard({
               children: [
                 TextSpan(text: 'Case : '),
                 TextSpan(
-                  text: item.salesBundle.toString(),
+                  text: item.salesBundle == -1
+                      ? ''
+                      : item.salesBundle.toString(),
                   style: TextStyle(
                     color: Colors.green,
                     fontWeight: FontWeight.bold,
@@ -33,39 +34,38 @@ Widget buildTotalCard({
 
           const Spacer(),
 
-          if (showMenu)
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert, color: Colors.blue),
-              onSelected: (value) {
-                if (value == "Edit") {
-                  onEdit();
-                } else {
-                  onDelete();
-                }
-              },
-              itemBuilder: (_) => [
-                const PopupMenuItem(
-                  value: "Edit",
-                  child: Row(
-                    children: [
-                      Icon(Icons.edit, color: Colors.green),
-                      SizedBox(width: 10),
-                      Text("Edit"),
-                    ],
-                  ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.blue),
+            onSelected: (value) {
+              if (value == "Edit") {
+                onEdit();
+              } else {
+                onDelete();
+              }
+            },
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: "Edit",
+                child: Row(
+                  children: [
+                    Icon(Icons.edit, color: Colors.green),
+                    SizedBox(width: 10),
+                    Text("Edit"),
+                  ],
                 ),
-                const PopupMenuItem(
-                  value: "Delete",
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red),
-                      SizedBox(width: 10),
-                      Text("Delete"),
-                    ],
-                  ),
+              ),
+              const PopupMenuItem(
+                value: "Delete",
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, color: Colors.red),
+                    SizedBox(width: 10),
+                    Text("Delete"),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ],
       ),
 
@@ -75,7 +75,7 @@ Widget buildTotalCard({
           children: [
             TextSpan(text: 'Bottle : '),
             TextSpan(
-              text: item.salesRetail.toString(),
+              text: item.salesRetail == -1 ? '' : item.salesRetail.toString(),
               style: TextStyle(
                 color: Colors.green,
 
@@ -93,7 +93,9 @@ Widget buildTotalCard({
           children: [
             TextSpan(text: "Total Bottle : "),
             TextSpan(
-              text: item.totalSalesRetailUnits.toString(),
+              text: item.totalSalesRetailUnits == -1
+                  ? ''
+                  : item.totalSalesRetailUnits.toString(),
               style: TextStyle(
                 color: Colors.purple,
 
@@ -110,7 +112,7 @@ Widget buildTotalCard({
         children: [
           Text('Rs.', style: TextStyle(color: Colors.black, fontSize: 18)),
           Text(
-            (item.totalPriceSales).toString(),
+            item.totalPriceSales == -1 ? '' : item.totalPriceSales.toString(),
             style: const TextStyle(
               color: Colors.blue,
               fontWeight: FontWeight.bold,

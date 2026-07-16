@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/core/constants/app_assets.dart';
 import 'package:stock_app_web/core/constants/app_constants.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
@@ -28,7 +29,7 @@ class WelcomePage extends StatelessWidget {
           height: 52,
           child: ElevatedButton(
             onPressed: () {
-              // Navigator.pushReplacementNamed(context, AppRoutes.shopCreation);
+              context.go(AppRoutes.shopCreation);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF4F46E5),

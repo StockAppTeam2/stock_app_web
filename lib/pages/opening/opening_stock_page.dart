@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/opening_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/utils/guid_video_links.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
 import 'package:stock_app_web/models/items_table_model.dart';
 import 'package:stock_app_web/pages/opening/opening_products_cards.dart';
+import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 import 'package:stock_app_web/pages/widgets/total_cases_widget.dart';
 
 enum ObViewType { obCases, obBottles, obCasesBottles, obCasesBottlesTotal }
@@ -26,6 +30,7 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
   String viewType = '';
   String query = '';
   String title = '';
+  bool isFirstDate = false;
 
   late Future<List<ItemsViewModel>> _future;
   List<ItemsViewModel> filterData = [];
@@ -35,6 +40,7 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
     super.initState();
     getViewDate();
     getViewType();
+    checkFirstDay();
     _future = loadOpeningData();
   }
 
@@ -233,23 +239,27 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
                                               context: context,
                                               item: product,
                                               width: 100,
-                                              showMenu: false,
-                                              onEdit: () {},
-                                              onDelete: () {},
-                                              // showMenu:
-                                              //     userController.isManager ||
-                                              //     userController.isInCharge,
-                                              // onEdit: () {
-                                              //   _editItem(data[index], context);
-                                              // },
-                                              // onDelete: () {
-                                              //   _deleteItem(
-                                              //     data[index].id,
-                                              //     context,
-                                              //     data[index].productId,
-                                              //     data[index].date,
-                                              //   );
-                                              // },
+                                              showMenu: isFirstDate,
+                                              onEdit: () async {
+                                                String shopId =
+                                                    await getIt<
+                                                          ShopIdController
+                                                        >()
+                                                        .getShopId();
+                                                await _openingController
+                                                    .addViewType(
+                                                      'obViewType',
+                                                      viewType,
+                                                    );
+                                                if (!context.mounted) return;
+                                                context.go(
+                                                  '/$shopId/${AppRoutes.editOpeningStock}',
+                                                  extra: {'data': product},
+                                                );
+                                              },
+                                              onDelete: () {
+                                                deletePopup(context, product);
+                                              },
                                             ),
                                         ],
                                       ),
@@ -305,6 +315,7 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
     } else {
       _future = loadOpeningData();
     }
+    setState(() {});
   }
 
   void getViewType() async {
@@ -362,14 +373,61 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
 
   Future<List<ItemsViewModel>> loadOpeningData() async {
     String value = await _viewDateController.getViewDateForUi();
+    String shopId = await getIt<ShopIdController>().getShopId();
 
     List<ItemsViewModel> data = await _openingController.getOpeningData(
       value,
-      '3810',
+      shopId,
     );
     filterData = data;
     print('loadOpeningData ${data.length}');
 
     return data;
+  }
+
+  void checkFirstDay() async {
+    bool isFirstDay = await _openingController.checkFirstDay();
+    setState(() {
+      isFirstDate = isFirstDay;
+    });
+  }
+
+  void deletePopup(BuildContext context, ItemsViewModel product) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Do You Want To Delete The Product?'),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                await _openingController.deleteOpening(product);
+                if (!context.mounted) return;
+                Navigator.pop(context);
+
+                showSuccessToast('Item Deleted Successfully');
+                updateFuture();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

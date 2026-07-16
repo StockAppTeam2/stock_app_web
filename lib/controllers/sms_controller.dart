@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:stock_app_web/controllers/pos_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/brand_firestore_repo.dart';
 import 'package:stock_app_web/core/repositories/firestore_repo.dart';
 import 'package:stock_app_web/models/brand_model.dart';
 import 'package:stock_app_web/models/items_table_model.dart';
@@ -12,6 +13,7 @@ class SmsController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _fireRepo = getIt<FirestoreRepo>();
   final posController = getIt<PosController>();
+  final _brandFirestoreRepo = getIt<BrandFirestoreRepo>();
   final _viewDateController = getIt<ViewDateController>();
 
   Future<List<List<dynamic>>> oneDayCalc() async {
@@ -221,13 +223,8 @@ class SmsController {
     Map<String, dynamic> adjustData =
         getAdjustmentValue.data() as Map<String, dynamic>;
 
-    // get sql brand
-    //check initial if the brand data is up to date is synced.
-    // List<BrandModel> sqlBrandData = await brandDatabaseHelper
-    //     .readBrandTableData();
-    List<BrandModel> sqlBrandData = await _fireRepo.getBrandCollection(
-      shopId.toString(),
-    );
+    List<BrandModel> sqlBrandData = await _brandFirestoreRepo
+        .getBrandCollection(shopId.toString());
 
     if (saleInfo.exists) {
       Map<String, dynamic> data = saleInfo.data() as Map<String, dynamic>;

@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:stock_app_web/controllers/opening_page_controller.dart';
 import 'package:stock_app_web/controllers/receipt_controller.dart';
 import 'package:stock_app_web/controllers/sales_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/models/inward_table_model.dart';
@@ -15,26 +16,18 @@ class SummaryController {
   final salesController = getIt<SalesPageController>();
 
   Future<List<List<List<String>>>> data() async {
-    // DateTime? lastDateChanged = await dateTimeController.getUserSelectedDate();
-    //
-    // DateTime date;
-    //
-    // if (lastDateChanged == null) {
-    //   date = toDayDate;
-    // } else {
-    //   date = lastDateChanged;
-    // }
     String viewDate = await _viewDateController.getViewDateForUi();
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<ItemsViewModel> itemsTableData = await openingController
-        .getOpeningData(viewDate, '3810');
+        .getOpeningData(viewDate, shopId);
 
     List<SalesViewModel> saleTableData = await salesController.getSalesData(
       viewDate,
-      '3810',
+      shopId,
     );
 
     List<InwardViewModel> inwardTableData = await inwardController
-        .getInwardData(viewDate, '3810');
+        .getInwardData(viewDate, shopId);
 
     print('vvvv $itemsTableData');
 
@@ -1173,32 +1166,12 @@ class SummaryController {
   }
 
   Future<List<Map<String, dynamic>>> salesCompletedData() async {
-    // DateTime targetDate,
     String viewDate = await _viewDateController.getViewDateForUi();
-    // final db = await databaseHelper.database;
-    // final String date = targetDate.toIso8601String().substring(0, 10);
 
-    // List<Map<String, dynamic>> maps = await db.rawQuery(
-    //   '''
-    //   SELECT
-    //       brand.category AS category,
-    //       SUM(sales.totalSalesRetailUnits) AS totalRetailUnits,
-    //       SUM(sales.totalPriceSales) AS totalPriceSales
-    //   FROM sales
-    //   JOIN brand
-    //     ON sales.productId = brand.productId
-    //   WHERE
-    //       sales.date = ?
-    //       AND sales.totalSalesRetailUnits != -1
-    //   GROUP BY
-    //       brand.category
-    //   ''',
-    //   [date],
-    // );
-
+    String shopId = await getIt<ShopIdController>().getShopId();
     List<SalesViewModel> saleTableData = await salesController.getSalesData(
       viewDate,
-      '3810',
+      shopId,
     );
 
     final grouped = groupBy(

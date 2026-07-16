@@ -5,11 +5,11 @@ class FirestoreService {
 
   int retryCount = 0;
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getDocument({
+  Future<DocumentSnapshot> getDocument({
     required String collection,
     required String docId,
-  }) {
-    return _db.collection(collection).doc(docId).get();
+  }) async {
+    return await _db.collection(collection).doc(docId).get();
   }
 
   Future<DocumentSnapshot> getSubCollectionDocument({
@@ -38,6 +38,21 @@ class FirestoreService {
         .get();
   }
 
+  Future<List<bool>> collectionExists({
+    required String collection,
+    required String shopId,
+    required String subCollection,
+  }) async {
+    final snapshot = await _db
+        .collection(collection)
+        .doc(shopId)
+        .collection(subCollection)
+        .limit(2)
+        .get();
+
+    return [snapshot.docs.isEmpty, snapshot.docs.length == 1];
+  }
+
   Future<void> add({
     required String collection,
     required String docId,
@@ -55,8 +70,8 @@ class FirestoreService {
     required String subCollection,
     required String docId,
     required Map<String, dynamic> data,
-  }) {
-    return _db
+  }) async {
+    return await _db
         .collection(collection)
         .doc(shopId)
         .collection(subCollection)
@@ -251,7 +266,29 @@ class FirestoreService {
       query = query.startAfter([lastDate]);
     }
 
-    return query.get();
+    return await query.get();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>>
+  getPaginatedDataUsingLastDateInward({
+    required String collection,
+    required String subCollection,
+    required String shopId,
+    String? lastDate,
+    int limit = 15,
+  }) async {
+    Query<Map<String, dynamic>> query = _db
+        .collection(collection)
+        .doc(shopId)
+        .collection(subCollection)
+        .orderBy(FieldPath.documentId, descending: true)
+        .limit(limit);
+
+    if (lastDate != null) {
+      query = query.startAfter([lastDate]);
+    }
+
+    return await query.get();
   }
 
   Future<Map<String, dynamic>> getReportsData({
@@ -348,5 +385,73 @@ class FirestoreService {
       'totalSales': totalSales,
       'totalReturn': totalReturn,
     };
+  }
+
+  Future<bool> hasValidTotalCloseRetailUnits({
+    required String collection,
+    required String shopId,
+    required String subCollection,
+    required String docId,
+  }) async {
+    final doc = await _db
+        .collection(collection)
+        .doc(shopId)
+        .collection(subCollection)
+        .doc(docId)
+        .get();
+
+    if (!doc.exists) return false;
+
+    final data = doc.data() as Map<String, dynamic>;
+
+    final map = data.map(
+      (key, value) => MapEntry(key, Map<String, dynamic>.from(value as Map)),
+    );
+
+    bool hasValidValue = map.values.any(
+      (item) => (item['totalCloseRetailUnits'] ?? -1) != -1,
+    );
+
+    if (hasValidValue) {
+      print('At least one item has totalCloseRetailUnits != -1');
+      return false;
+    } else {
+      print('All items have totalCloseRetailUnits == -1');
+      return true;
+    }
+  }
+
+  Future<bool> hasValidTotalSalesRetailUnits({
+    required String collection,
+    required String shopId,
+    required String subCollection,
+    required String docId,
+  }) async {
+    final doc = await _db
+        .collection(collection)
+        .doc(shopId)
+        .collection(subCollection)
+        .doc(docId)
+        .get();
+
+    if (!doc.exists) return false;
+
+    final data = doc.data() as Map<String, dynamic>;
+
+    final map = data.map(
+      (key, value) => MapEntry(key, Map<String, dynamic>.from(value as Map)),
+    );
+
+    bool hasValidValue = map.values.any(
+      (item) => (item['totalSalesRetailUnits'] ?? -1) != -1,
+    );
+
+    if (hasValidValue) {
+      print('At least one item has totalSalesRetailUnits != -1');
+      return false;
+    } else {
+      print('All items have totalSalesRetailUnits == -1');
+      return true;
+    }
   }
 }

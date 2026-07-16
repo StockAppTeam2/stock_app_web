@@ -236,4 +236,20 @@ class UserRepository {
       data: posData,
     );
   }
+
+  Future<String> getShopIdInFirebase(String docId) async {
+    final doc = await _service.getDocument(
+      collection: userCollection,
+      docId: docId,
+    );
+
+    if (!doc.exists) {
+      return '';
+    }
+
+    final data = doc.data() as Map<String, dynamic>;
+    if (!data.containsKey('shopId')) return '';
+
+    return data['shopId'].toString();
+  }
 }

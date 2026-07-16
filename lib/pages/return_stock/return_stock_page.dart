@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_app_web/controllers/return_stock_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
@@ -407,8 +408,10 @@ class _ReturnStockPageState extends State<ReturnStockPage> {
 
   Future<List<ReturnViewModel>> getReturnStock() async {
     String value = await _viewDateController.getViewDateForUi();
+    String shopId = await getIt<ShopIdController>().getShopId();
+
     List<ReturnViewModel> returnStock = await returnStockController
-        .getAllReturnStock('3810', value);
+        .getAllReturnStock(shopId, value);
     print('returnStock: $returnStock');
     return returnStock;
   }

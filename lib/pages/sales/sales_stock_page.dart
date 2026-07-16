@@ -1,12 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/sales_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/Internet_connection_repo.dart';
+import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/utils/guid_video_links.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
 import 'package:stock_app_web/models/sales_table_model.dart';
 import 'package:stock_app_web/pages/sales/sales_products_cards.dart';
+import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 
 class SalesStockPage extends StatefulWidget {
   const SalesStockPage({super.key});
@@ -18,9 +24,11 @@ class SalesStockPage extends StatefulWidget {
 class _SalesStockPageState extends State<SalesStockPage> {
   final _viewDateController = getIt<ViewDateController>();
   final _salesController = getIt<SalesPageController>();
+  final _internetConnectionRepo = getIt<InternetConnectionRepo>();
 
   String viewDate = '';
   String query = '';
+  bool allowSalesEntry = false;
 
   late Future<List<SalesViewModel>> _future;
   List<SalesViewModel> filterData = [];
@@ -28,6 +36,7 @@ class _SalesStockPageState extends State<SalesStockPage> {
   @override
   void initState() {
     super.initState();
+    checkSalseOrCb();
     getViewDate();
     _future = loadSalesData();
   }
@@ -46,7 +55,7 @@ class _SalesStockPageState extends State<SalesStockPage> {
         child: Column(
           children: [
             PageHeader(
-              title: 'Sales Entry',
+              title: 'Sales Page',
               viewDate: viewDate,
               query: (String p1) {
                 setState(() {
@@ -164,23 +173,8 @@ class _SalesStockPageState extends State<SalesStockPage> {
                                             context: context,
                                             item: product,
                                             width: 100,
-                                            showMenu: false,
                                             onEdit: () {},
                                             onDelete: () {},
-                                            // showMenu:
-                                            //     userController.isManager ||
-                                            //     userController.isInCharge,
-                                            // onEdit: () {
-                                            //   _editItem(data[index], context);
-                                            // },
-                                            // onDelete: () {
-                                            //   _deleteItem(
-                                            //     data[index].id,
-                                            //     context,
-                                            //     data[index].productId,
-                                            //     data[index].date,
-                                            //   );
-                                            // },
                                           ),
                                         ],
                                       ),
@@ -213,10 +207,11 @@ class _SalesStockPageState extends State<SalesStockPage> {
 
   Future<List<SalesViewModel>> loadSalesData() async {
     String value = await _viewDateController.getViewDateForUi();
+    String shopId = await getIt<ShopIdController>().getShopId();
 
     List<SalesViewModel> data = await _salesController.getSalesData(
       value,
-      '3810',
+      shopId,
     );
     filterData = data;
     print('loadSalesData ${data.length}');
@@ -250,5 +245,34 @@ class _SalesStockPageState extends State<SalesStockPage> {
 
   void disposeDataInFuture() {
     _future = Future.value([]);
+  }
+
+  void checkSalseOrCb() async {
+    bool isConnected = await _internetConnectionRepo.checkInternetConnection();
+    String shopId = await getIt<ShopIdController>().getShopId();
+
+    if (isConnected) {
+      DocumentReference salesOrCb = FirebaseFirestore.instance
+          .collection('items')
+          .doc(shopId);
+      DocumentSnapshot salesOrCbData = await salesOrCb.get();
+
+      if (salesOrCbData.exists) {
+        Map<String, dynamic> data =
+            salesOrCbData.data() as Map<String, dynamic>;
+
+        if (data.containsKey('EnterSales')) {
+          bool salesEntryType = data['EnterSales'] as bool;
+
+          if (salesEntryType == true) {
+            context.go('/$shopId/${AppRoutes.addSalesStock}');
+          } else {
+            context.go('/$shopId/${AppRoutes.salesStock}');
+          }
+        }
+      }
+    } else {
+      showErrorToast('No Internet Connection');
+    }
   }
 }

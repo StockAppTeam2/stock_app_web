@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/closing_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/Internet_connection_repo.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
+import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 
 class ClosingViewType extends StatefulWidget {
   const ClosingViewType({super.key});
@@ -15,12 +19,14 @@ class ClosingViewType extends StatefulWidget {
 class _OpeningViewTypeState extends State<ClosingViewType> {
   final _viewDateController = getIt<ViewDateController>();
   final _closingController = getIt<ClosingPageController>();
+  final _internetConnectionRepo = getIt<InternetConnectionRepo>();
 
   String viewDate = '';
 
   @override
   void initState() {
     super.initState();
+    checkSalseOrCb();
     _viewDateController.getViewDateForUi().then((value) {
       if (mounted) {
         setState(() => viewDate = value);
@@ -78,12 +84,40 @@ class _OpeningViewTypeState extends State<ClosingViewType> {
     );
   }
 
+  void checkSalseOrCb() async {
+    bool isConnected = await _internetConnectionRepo.checkInternetConnection();
+    String shopId = await getIt<ShopIdController>().getShopId();
+
+    if (isConnected) {
+      DocumentReference salesOrCb = FirebaseFirestore.instance
+          .collection('items')
+          .doc(shopId);
+      DocumentSnapshot salesOrCbData = await salesOrCb.get();
+
+      if (salesOrCbData.exists) {
+        Map<String, dynamic> data =
+            salesOrCbData.data() as Map<String, dynamic>;
+
+        if (data.containsKey('EnterSales')) {
+          bool salesEntryType = data['EnterSales'] as bool;
+
+          if (salesEntryType == false) {
+            context.go('/$shopId/${AppRoutes.addClosingStock}');
+          }
+        }
+      }
+    } else {
+      showErrorToast('No Internet Connection');
+    }
+  }
+
   Future<void> _navigateToOpeningStock(
     BuildContext context,
     String viewType,
   ) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
     await _closingController.addViewType('cbViewType', viewType);
     if (!context.mounted) return;
-    context.go(AppRoutes.closingStock);
+    context.go('/$shopId/${AppRoutes.closingStock}');
   }
 }

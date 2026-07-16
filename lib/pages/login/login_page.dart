@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/login_page_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/constants/app_assets.dart';
 import 'package:stock_app_web/core/constants/app_constants.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
+import 'package:stock_app_web/core/services/firestore_service.dart';
 import 'package:stock_app_web/core/utils/dialog_helper.dart';
 import 'package:stock_app_web/core/utils/network_helper.dart';
 import 'package:stock_app_web/core/utils/responsive.dart';
@@ -18,6 +21,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final LoginPageController loginPageController = getIt<LoginPageController>();
+  final shopIdController = getIt<ShopIdController>();
+  final firestoreService = getIt<FirestoreService>();
 
   final mobileController = TextEditingController();
   final passwordController = TextEditingController();
@@ -62,9 +67,24 @@ class _LoginPageState extends State<LoginPage> {
 
       switch (result) {
         case LoginStatus.success:
+          String shopId = await loginPageController.getShopIdUsingPhoneNumber(
+            mobile,
+          );
+          await shopIdController.setShopId(shopId);
+          await firestoreService.add(
+            collection: 'web_cache',
+            docId: shopId,
+            data: {
+              'shopId': shopId,
+              'is_logged_in': true,
+              'mobile_number': mobileController.text,
+            },
+          );
           print('Login Success');
+
           if (!context.mounted) return;
-          // Navigator.pushReplacementNamed(context, AppRoutes.home);
+          context.go('/$shopId/${AppRoutes.home}');
+
           break;
         case LoginStatus.userNotFound:
           print('User Not Found');
@@ -290,15 +310,10 @@ class _LoginPageState extends State<LoginPage> {
 
             SizedBox(height: 10),
 
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: () {
-                // Navigator.pushReplacementNamed(context, AppRoutes.welcome);
+                context.go(AppRoutes.welcome);
               },
-              icon: const Icon(Icons.storefront_outlined),
-              label: const Text(
-                'New Shop',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(180, 50),
                 backgroundColor: const Color(0xFF16A34A),
@@ -307,6 +322,10 @@ class _LoginPageState extends State<LoginPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
+              ),
+              child: const Text(
+                'New Shop',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
 

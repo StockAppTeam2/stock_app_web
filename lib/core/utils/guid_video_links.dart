@@ -10,3 +10,5 @@ const changePasswordVideoLink =
 const salesVideoLink = 'https://youtu.be/oRUTSzIFSb4?si=mtzY-PtU3J7v3xot';
 const form49VideoLink =
     'https://youtube.com/shorts/Uf8LExS1mV8?si=nNJS-oUwNFB38JoQ';
+
+const stockChittaPage = 'https://www.youtube.com/@StockChittaTamil';
