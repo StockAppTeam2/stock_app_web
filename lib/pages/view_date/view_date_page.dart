@@ -21,6 +21,7 @@ class _ViewDatePageState extends State<ViewDatePage> {
   String viewDate = '';
   List<String> viewDates = [];
   String? lastDate;
+  String todayDate = '';
 
   bool isFirstLoading = true;
   bool isLoadingMore = false;
@@ -51,6 +52,16 @@ class _ViewDatePageState extends State<ViewDatePage> {
   void getViewDate() async {
     String date = await _viewDateController.getViewDateForUi();
     viewDate = date;
+    DateTime dateTime = DateTime.now();
+    todayDate = dateTime
+        .toString()
+        .substring(0, 10)
+        .split('-')
+        .reversed
+        .join('-')
+        .toString();
+    print('todayDate $todayDate');
+    setState(() {});
   }
 
   Future<void> getViewDateList() async {
@@ -89,7 +100,7 @@ class _ViewDatePageState extends State<ViewDatePage> {
 
     isFirstLoading = false;
     isLoadingMore = false;
-
+    viewDates.insert(0, DateTime.now().toString().substring(0, 10));
     setState(() {});
   }
 
@@ -98,68 +109,83 @@ class _ViewDatePageState extends State<ViewDatePage> {
     return AppNavigatorWrapper(
       child: isFirstLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              controller: scrollController,
-              itemCount: viewDates.length + (isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == viewDates.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Today : $todayDate',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: viewDates.length + (isLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == viewDates.length) {
+                        return const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
 
-                final item = viewDates[index];
+                      final item = viewDates[index];
 
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 16,
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.calendar_month, color: Colors.blue),
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.calendar_month,
+                                color: Colors.blue,
+                              ),
 
-                        const SizedBox(width: 16),
+                              const SizedBox(width: 16),
 
-                        Expanded(
-                          child: Text(
-                            formatYYYYMMDDToDDMMYYYY(item),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                              Expanded(
+                                child: Text(
+                                  formatYYYYMMDDToDDMMYYYY(item),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+
+                              FilledButton.icon(
+                                onPressed: () async {
+                                  await _viewDateController.setViewDate(item);
+
+                                  String shopId =
+                                      await getIt<ShopIdController>()
+                                          .getShopId();
+                                  if (context.mounted) {
+                                    context.go('/$shopId/${AppRoutes.home}');
+                                  }
+                                },
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: viewDate.isNotEmpty
+                                      ? item == viewDate
+                                            ? Colors.purple
+                                            : Colors.green
+                                      : null,
+                                ),
+                                icon: Icon(Icons.remove_red_eye_outlined),
+
+                                label: const Text("View"),
+                              ),
+                            ],
                           ),
                         ),
-
-                        FilledButton.icon(
-                          onPressed: () async {
-                            await _viewDateController.setViewDate(item);
-
-                            String shopId = await getIt<ShopIdController>()
-                                .getShopId();
-                            if (context.mounted) {
-                              context.go('/$shopId/${AppRoutes.home}');
-                            }
-                          },
-                          style: FilledButton.styleFrom(
-                            backgroundColor: viewDate.isNotEmpty
-                                ? item == viewDate
-                                      ? Colors.purple
-                                      : Colors.green
-                                : null,
-                          ),
-                          icon: Icon(Icons.remove_red_eye_outlined),
-
-                          label: const Text("View"),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
     );
   }

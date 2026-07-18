@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/repositories/Internet_connection_repo.dart';
@@ -53,7 +52,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
+              onTap: () async {
+                String header = await _cacheRepository
+                    .getStringCacheLocalAndFirebase(key: 'excelHeader');
+                String district = await _cacheRepository
+                    .getStringCacheLocalAndFirebase(key: 'excelDistrict');
+                setState(() {
+                  excelHeaderController.text = header;
+                  excelDistrictController.text = district;
+                });
+
                 showDialog(
                   context: context,
                   builder: (context) {

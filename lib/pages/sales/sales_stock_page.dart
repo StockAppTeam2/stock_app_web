@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:stock_app_web/controllers/indent_controller.dart';
 import 'package:stock_app_web/controllers/sales_page_controller.dart';
 import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
@@ -10,6 +11,7 @@ import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/utils/guid_video_links.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
+import 'package:stock_app_web/models/indent_plan_model.dart';
 import 'package:stock_app_web/models/sales_table_model.dart';
 import 'package:stock_app_web/pages/sales/sales_products_cards.dart';
 import 'package:stock_app_web/pages/widgets/toast_popup.dart';
@@ -23,20 +25,18 @@ class SalesStockPage extends StatefulWidget {
 
 class _SalesStockPageState extends State<SalesStockPage> {
   final _viewDateController = getIt<ViewDateController>();
-  final _salesController = getIt<SalesPageController>();
-  final _internetConnectionRepo = getIt<InternetConnectionRepo>();
+  final indentController = getIt<IndentController>();
 
   String viewDate = '';
   String query = '';
   bool allowSalesEntry = false;
 
-  late Future<List<SalesViewModel>> _future;
-  List<SalesViewModel> filterData = [];
+  late Future<List<IndentPlanModel>> _future;
+  List<IndentPlanModel> filterData = [];
 
   @override
   void initState() {
     super.initState();
-    checkSalseOrCb();
     getViewDate();
     _future = loadSalesData();
   }
@@ -63,7 +63,7 @@ class _SalesStockPageState extends State<SalesStockPage> {
                   updateFuture();
                 });
               },
-              videoLink: salesVideoLink,
+              videoLink: '',
               page: 'sales_stock',
               invoiceNo: '',
               showReport: true,
@@ -72,7 +72,7 @@ class _SalesStockPageState extends State<SalesStockPage> {
             const SizedBox(height: 20),
 
             Expanded(
-              child: FutureBuilder<List<SalesViewModel>>(
+              child: FutureBuilder<List<IndentPlanModel>>(
                 future: _future,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -99,10 +99,10 @@ class _SalesStockPageState extends State<SalesStockPage> {
                                 maxCrossAxisExtent: 500,
                                 crossAxisSpacing: 8,
                                 mainAxisSpacing: 8,
-                                childAspectRatio: 2.3,
+                                childAspectRatio: 1.9,
                               ),
                           itemBuilder: (_, index) {
-                            final product = products[index];
+                            final data = products[index];
 
                             return Card(
                               shape: RoundedRectangleBorder(
@@ -113,72 +113,157 @@ class _SalesStockPageState extends State<SalesStockPage> {
                                 ),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      flex: 5,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '${index + 1}.',
-                                                style: TextStyle(fontSize: 18),
-                                              ),
-                                              Text(
-                                                ' ${product.productId.toString()},',
-                                                style: const TextStyle(
-                                                  color: Colors.purpleAccent,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${index + 1}.',
+                                          style: const TextStyle(
+                                            color: Colors.black,
                                           ),
-                                          Text(
-                                            product.brand,
-                                            maxLines: 2,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          '${data.productId.toString()} - ',
+                                          style: const TextStyle(
+                                            color: Colors.purpleAccent,
+                                            // fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
+                                            data.brand,
                                             style: const TextStyle(
                                               color: Colors.purpleAccent,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 18,
+                                              fontSize: 19,
                                             ),
                                           ),
-                                          Text(
-                                            '${product.category} - ${product.size},',
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Rs. ${product.price} - ${product.range}',
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                      flex: 4,
-                                      child: Column(
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 10.0,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          buildTotalCard(
-                                            context: context,
-                                            item: product,
-                                            width: 100,
-                                            onEdit: () {},
-                                            onDelete: () {},
+                                          Text(
+                                            '${data.range} - ',
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            "${data.size} - ",
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Rs.${data.price.toString()}',
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
+                                    const SizedBox(height: 30),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: InputDecorator(
+                                            decoration: InputDecoration(
+                                              labelText: 'OB',
+
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              data.totalActualRetailUnits
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const Icon(Icons.minimize),
+                                        Expanded(
+                                          flex: 3,
+                                          child: InputDecorator(
+                                            decoration: InputDecoration(
+                                              labelText: 'SALES',
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              '${data.totalSalesRetailUnits != -1 ? data.totalSalesRetailUnits : ''} '
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+
+                                                color: Colors.orange,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const Icon(Icons.drag_handle),
+                                        Expanded(
+                                          flex: 3,
+                                          child: InputDecorator(
+                                            decoration: InputDecoration(
+                                              labelText: 'CB',
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              '${data.totalCloseRetailUnits != -1 ? data.totalCloseRetailUnits : ''}'
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                // fontSize: 22,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 20),
+                                    if (data.totalCloseRetailUnits != -1)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '(${data.totalSalesRetailUnits != -1 ? data.totalSalesRetailUnits : ' '} × Rs.${data.price.toString()} = Rs.${data.totalPriceSales != -1 ? data.totalPriceSales : ' '})',
+                                            style: TextStyle(
+                                              color: Colors.indigo[800],
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                   ],
                                 ),
                               ),
@@ -205,22 +290,24 @@ class _SalesStockPageState extends State<SalesStockPage> {
     }
   }
 
-  Future<List<SalesViewModel>> loadSalesData() async {
+  Future<List<IndentPlanModel>> loadSalesData() async {
     String value = await _viewDateController.getViewDateForUi();
     String shopId = await getIt<ShopIdController>().getShopId();
-
-    List<SalesViewModel> data = await _salesController.getSalesData(
-      value,
-      shopId,
-    );
-    filterData = data;
-    print('loadSalesData ${data.length}');
-
-    return data;
+    try {
+      List<IndentPlanModel> indentData = await indentController.getIndentData(
+        value,
+        shopId,
+      );
+      filterData = indentData;
+      return indentData;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
-  Future<List<SalesViewModel>> loadFilteredSalesData(String query) async {
-    List<SalesViewModel> data = [];
+  Future<List<IndentPlanModel>> loadFilteredSalesData(String query) async {
+    List<IndentPlanModel> data = [];
 
     data = filterData
         .where(
@@ -245,34 +332,5 @@ class _SalesStockPageState extends State<SalesStockPage> {
 
   void disposeDataInFuture() {
     _future = Future.value([]);
-  }
-
-  void checkSalseOrCb() async {
-    bool isConnected = await _internetConnectionRepo.checkInternetConnection();
-    String shopId = await getIt<ShopIdController>().getShopId();
-
-    if (isConnected) {
-      DocumentReference salesOrCb = FirebaseFirestore.instance
-          .collection('items')
-          .doc(shopId);
-      DocumentSnapshot salesOrCbData = await salesOrCb.get();
-
-      if (salesOrCbData.exists) {
-        Map<String, dynamic> data =
-            salesOrCbData.data() as Map<String, dynamic>;
-
-        if (data.containsKey('EnterSales')) {
-          bool salesEntryType = data['EnterSales'] as bool;
-
-          if (salesEntryType == true) {
-            context.go('/$shopId/${AppRoutes.addSalesStock}');
-          } else {
-            context.go('/$shopId/${AppRoutes.salesStock}');
-          }
-        }
-      }
-    } else {
-      showErrorToast('No Internet Connection');
-    }
   }
 }

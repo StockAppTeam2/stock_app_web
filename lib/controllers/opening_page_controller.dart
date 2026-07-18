@@ -16,6 +16,7 @@ class OpeningPageController {
   final _cache = getIt<CacheRepository>();
   final _downloadPdf = getIt<DownloadPdfRepo>();
   final _internetConnectionRepo = getIt<InternetConnectionRepo>();
+  final fireRepo = getIt<FirestoreRepo>();
 
   Future<void> addViewType(String key, String value) async {
     await _cache.addStringCacheLocalAndFirebase(key, value);
@@ -199,5 +200,28 @@ class OpeningPageController {
 
   Future<void> deleteOpening(ItemsViewModel product) async {
     await _openingFireRepo.deleteOpeningData(product);
+  }
+
+  Future<List<String>> getDates(String? lastDate, int pageSize) async {
+    final dates = await fireRepo.loadFirstPageViewDate(
+      lastDate: lastDate,
+      limit: pageSize,
+    );
+    return dates;
+  }
+
+  Future<bool> checkClosingExist(String date) async {
+    bool isExist = await _openingFireRepo.checkClosingExist(date);
+    return isExist;
+  }
+
+  Future<List<String>> checkTodayYesterdayDataExist() async {
+    List<String> isExist = await _openingFireRepo
+        .checkTodayYesterdayDataExist();
+    return isExist;
+  }
+
+  Future<void> cbToOb(String lastDataExistDate, String obDate) async {
+    await _openingFireRepo.cbToOb(lastDataExistDate, obDate);
   }
 }

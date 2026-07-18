@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
+import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/Internet_connection_repo.dart';
 import 'package:stock_app_web/models/items_table_model.dart';
+import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 
-Widget buildOpeningCard({
+Widget buildClosingCard({
   required String title,
   required String value,
   required bool checked,
@@ -241,4 +246,169 @@ Widget buildTotalCard({
       ),
     ],
   );
+}
+
+class UnscannedButton extends StatelessWidget {
+  final TextEditingController controller;
+  final ItemsViewModel closingStockData;
+  final GlobalKey<FormState> formKey;
+  final Function(int) onUpdated;
+
+  const UnscannedButton({
+    super.key,
+    required this.controller,
+    required this.closingStockData,
+    required this.formKey,
+    required this.onUpdated,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        final internetConnectionRepo = getIt<InternetConnectionRepo>();
+        bool isConnected = await internetConnectionRepo
+            .checkInternetConnection();
+
+        if (isConnected) {
+          controller.text = closingStockData.unscannedEntry == 0
+              ? ''
+              : closingStockData.unscannedEntry.toString();
+
+          showDialog(
+            context: context,
+            builder: (context) {
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return AlertDialog(
+                    title: const Text('Enter Unscanned Bottles'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Form(
+                          key: formKey,
+                          child: TextFormField(
+                            controller: controller,
+                            keyboardType: TextInputType.number,
+                            validator: (val) {
+                              if (val == null ||
+                                  val.isEmpty ||
+                                  int.tryParse(val) == null ||
+                                  int.tryParse(val)!.isNegative) {
+                                return 'please Enter Value';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    actionsAlignment: MainAxisAlignment.spaceBetween,
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          // setState(() {
+                          //   loadingUnscanned = true;
+                          // });
+                          if (formKey.currentState!.validate()) {
+                            if (closingStockData.totalCloseRetailUnits >=
+                                int.parse(controller.text)) {
+                              String shopId = await getIt<ShopIdController>()
+                                  .getShopId();
+                              //fire
+                              DocumentReference documentReference =
+                                  FirebaseFirestore.instance
+                                      .collection('items')
+                                      .doc(shopId)
+                                      .collection('date')
+                                      .doc(closingStockData.date);
+                              DocumentSnapshot documentSnap =
+                                  await documentReference.get();
+                              if (documentSnap.exists) {
+                                Map<String, dynamic> data =
+                                    documentSnap.data() as Map<String, dynamic>;
+                                if (data.isNotEmpty) {
+                                  if (data.containsKey(
+                                    closingStockData.productId.toString(),
+                                  )) {
+                                    Map<String, dynamic> newData = {};
+                                    newData[closingStockData.productId
+                                        .toString()] = {
+                                      'unscannedEntry': int.parse(
+                                        controller.text,
+                                      ),
+                                    };
+                                    await documentReference.set(
+                                      newData,
+                                      SetOptions(merge: true),
+                                    );
+                                  }
+                                }
+                              }
+                              showSuccessToast('Data Added Successfully');
+                              onUpdated(int.tryParse(controller.text)!);
+                              Navigator.of(context).pop();
+                            } else {
+                              showErrorToast('Please Check The Values');
+                            }
+                          }
+                          // setState(() {
+                          //   loadingUnscanned = false;
+                          // });
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Ok'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          );
+        } else {
+          showErrorToast('No Internet Connection');
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6), // adjust radius here
+        ),
+      ),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(fontSize: 20),
+          children: [
+            const TextSpan(
+              text: 'unscanned ',
+              style: TextStyle(color: Colors.blue),
+            ),
+            closingStockData.unscannedEntry != 0
+                ? TextSpan(
+                    text: '(${closingStockData.unscannedEntry})',
+                    style: TextStyle(color: Colors.brown.shade900),
+                  )
+                : const TextSpan(text: ''),
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -2,7 +2,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stock_app_web/controllers/receipt_controller.dart';
-import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
@@ -244,7 +243,7 @@ class _EditReceiptPageState extends State<EditReceiptPage> {
             child: Text(title, style: const TextStyle(fontSize: 18)),
           ),
           const SizedBox(width: 16),
-          Expanded(flex: 3, child: child),
+          Expanded(flex: 6, child: child),
         ],
       ),
     );

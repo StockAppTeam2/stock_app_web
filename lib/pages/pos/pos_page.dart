@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stock_app_web/controllers/pos_controller.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
+import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/utils/format_date.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/models/pos_model.dart';
+import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 
 class PosPage extends StatefulWidget {
   final String monthAndYear;
@@ -16,6 +21,15 @@ class PosPage extends StatefulWidget {
 
 class _PosPageState extends State<PosPage> {
   final posController = getIt<PosController>();
+  final _viewDateController = getIt<ViewDateController>();
+
+  String viewDate = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getViewDate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +81,71 @@ class _PosPageState extends State<PosPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(formatYYYYMMDDToDDMMYYYY(item.posDate)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(formatYYYYMMDDToDDMMYYYY(item.posDate)),
+                                  if (index == 0)
+                                    PopupMenuButton<String>(
+                                      icon: const Icon(
+                                        Icons.more_vert,
+                                        color: Colors.blue,
+                                      ),
+                                      onSelected: (value) async {
+                                        if (value == "Edit") {
+                                          String shopId =
+                                              await getIt<ShopIdController>()
+                                                  .getShopId();
+                                          if (!context.mounted) return;
+                                          context.go(
+                                            '/$shopId/${AppRoutes.editPos}',
+                                            extra: {'posData': item},
+                                          );
+                                        } else {
+                                          deletePopup(context, item);
+                                        }
+                                      },
+                                      itemBuilder: (_) => [
+                                        const PopupMenuItem(
+                                          value: "Edit",
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.edit,
+                                                color: Colors.green,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("Edit"),
+                                            ],
+                                          ),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: "Delete",
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("Delete"),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
                               const SizedBox(height: 12),
                               _buildRow('POS Value', '${item.posValue}'),
                               const SizedBox(height: 12),
-                              _buildRow(
-                                'POS Cumulative',
-                                '${item.posCumulative}',
-                              ),
+                              item.posCumulative == 0
+                                  ? Text('data')
+                                  : _buildRow(
+                                      'POS Cumulative',
+                                      '${item.posCumulative}',
+                                    ),
                             ],
                           ),
                         ),
@@ -159,4 +230,52 @@ class _PosPageState extends State<PosPage> {
 
   TableRow emptyTableRow() =>
       const TableRow(children: [SizedBox(), SizedBox(), SizedBox()]);
+
+  void getViewDate() async {
+    String value = await _viewDateController.getViewDateForUi();
+    print('viewdate: $value');
+    if (mounted) {
+      setState(() => viewDate = value);
+    }
+  }
+
+  void deletePopup(BuildContext context, NewPosModel product) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Do You Want To Delete The Product?'),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                await posController.deletePos(product);
+                if (!context.mounted) return;
+                Navigator.pop(context);
+
+                showSuccessToast('Item Deleted Successfully');
+                getPosData();
+                setState(() {});
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'package:stock_app_web/controllers/closing_page_controller.dart';
 import 'package:stock_app_web/controllers/current_page_controller.dart';
 import 'package:stock_app_web/controllers/home_page_controller.dart';
 import 'package:stock_app_web/controllers/indent_controller.dart';
+import 'package:stock_app_web/controllers/last_year_sales_cumulative_controller.dart';
 import 'package:stock_app_web/controllers/login_page_controller.dart';
 import 'package:stock_app_web/controllers/match_e2e_controller.dart';
 import 'package:stock_app_web/controllers/opening_page_controller.dart';
@@ -26,6 +27,7 @@ import 'package:stock_app_web/core/repositories/cache_repository.dart';
 import 'package:stock_app_web/core/repositories/device_info_repository.dart';
 import 'package:stock_app_web/core/repositories/download_pdf_repo.dart';
 import 'package:stock_app_web/core/repositories/firestore_repo.dart';
+import 'package:stock_app_web/core/repositories/last_year_sales_cumulative_repo.dart';
 import 'package:stock_app_web/core/repositories/opening_firestore_repo.dart';
 import 'package:stock_app_web/core/repositories/purchase_firestore_repo.dart';
 import 'package:stock_app_web/core/repositories/sales_firestore_repo.dart';
@@ -69,6 +71,9 @@ Future<void> setupLocator() async {
     () => PurchaseFirestoreRepo(),
   );
   getIt.registerLazySingleton<SalesFirestoreRepo>(() => SalesFirestoreRepo());
+  getIt.registerLazySingleton<LastYearSalesCumulativeRepo>(
+    () => LastYearSalesCumulativeRepo(),
+  );
 
   // controller
   getIt.registerLazySingleton<LoginPageController>(() => LoginPageController());
@@ -104,4 +109,7 @@ Future<void> setupLocator() async {
     () => PreviousDayCumulativeController(),
   );
   getIt.registerLazySingleton<MatchE2eController>(() => MatchE2eController());
+  getIt.registerLazySingleton<LastYearSalesCumulativeController>(
+    () => LastYearSalesCumulativeController(),
+  );
 }

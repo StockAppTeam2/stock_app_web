@@ -10,6 +10,8 @@ import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
 import 'package:stock_app_web/models/items_table_model.dart';
 import 'package:stock_app_web/pages/opening/opening_products_cards.dart';
+import 'package:stock_app_web/pages/opening/widgets/cb_to_ob_popup.dart';
+import 'package:stock_app_web/pages/opening/widgets/previous_day_closing_exist.dart';
 import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 import 'package:stock_app_web/pages/widgets/total_cases_widget.dart';
 
@@ -39,7 +41,7 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
   void initState() {
     super.initState();
     getViewDate();
-    getViewType();
+
     checkFirstDay();
     _future = loadOpeningData();
   }
@@ -88,6 +90,56 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
                   }
 
                   final products = snapshot.data ?? [];
+
+                  if (products.isEmpty) {
+                    return Center(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // view date
+                          List<String> viewDates = await _openingController
+                              .getDates(null, 2);
+
+                          bool isPreviousDayClosingExist =
+                              await _openingController.checkClosingExist(
+                                viewDates.first,
+                              );
+                          print(
+                            'isPreviousDayClosingExist $isPreviousDayClosingExist',
+                          );
+
+                          if (isPreviousDayClosingExist) {
+                            // check last today and yesterday have data
+                            List<String> isLastTowDaysDataExist =
+                                await _openingController
+                                    .checkTodayYesterdayDataExist();
+
+                            if (!context.mounted) return;
+
+                            final bool? isDone = await cbToObPopup(
+                              context,
+                              isLastTowDaysDataExist,
+                              viewDates.first,
+                            );
+                            if (isDone == true) {
+                              print('isDone working');
+                              await checkFirstDay();
+                              setState(() {
+                                _future = loadOpeningData();
+                              });
+                            }
+                          } else {
+                            showPreviousDayClosingIsMissing(context);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          minimumSize: Size(140, 50),
+                        ),
+                        child: Text('CB TO OB'),
+                      ),
+                    );
+                  }
 
                   if (products.isEmpty) {
                     return const Center(child: Text("No Data Found"));
@@ -318,34 +370,6 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
     setState(() {});
   }
 
-  void getViewType() async {
-    String type = await _openingController.getViewType('obViewType');
-    setState(() {
-      viewType = type;
-    });
-
-    if (type != '') {
-      print('viewType OB : $viewType');
-      if (viewType == ObViewType.obCases.name) {
-        setState(() {
-          title = 'OB CASES';
-        });
-      } else if (viewType == ObViewType.obBottles.name) {
-        setState(() {
-          title = 'OB BOTTLES';
-        });
-      } else if (viewType == ObViewType.obCasesBottles.name) {
-        setState(() {
-          title = 'OB CASES + BOTTLES';
-        });
-      } else if (viewType == ObViewType.obCasesBottlesTotal.name) {
-        setState(() {
-          title = 'OB CASE BTL TOTAL ';
-        });
-      }
-    }
-  }
-
   void getViewDate() async {
     String value = await _viewDateController.getViewDateForUi();
     print('viewdate: $value');
@@ -374,18 +398,55 @@ class _OpeningStockPageState extends State<OpeningStockPage> {
   Future<List<ItemsViewModel>> loadOpeningData() async {
     String value = await _viewDateController.getViewDateForUi();
     String shopId = await getIt<ShopIdController>().getShopId();
+    List<ItemsViewModel> itemsData = [];
 
     List<ItemsViewModel> data = await _openingController.getOpeningData(
       value,
       shopId,
     );
-    filterData = data;
+    String type = await _openingController.getViewType('obViewType');
+    setState(() {
+      viewType = type;
+    });
+
+    if (type != '') {
+      print('viewType OB : $viewType');
+      if (viewType == ObViewType.obCases.name) {
+        title = 'OB CASES';
+        itemsData.addAll(
+          data.where((item) {
+            return item.actualBundle != 0;
+          }),
+        );
+      } else if (viewType == ObViewType.obBottles.name) {
+        title = 'OB BOTTLES';
+        itemsData.addAll(
+          data.where((item) {
+            return item.actualRetail != 0;
+          }),
+        );
+      } else if (viewType == ObViewType.obCasesBottles.name) {
+        title = 'OB CASES + BOTTLES';
+        itemsData.addAll(
+          data.where((item) {
+            return item.totalActualRetailUnits != 0;
+          }),
+        );
+      } else if (viewType == ObViewType.obCasesBottlesTotal.name) {
+        setState(() {
+          title = 'OB CASE BTL TOTAL ';
+        });
+        itemsData = data;
+      }
+    }
+
+    filterData = itemsData;
     print('loadOpeningData ${data.length}');
 
-    return data;
+    return itemsData;
   }
 
-  void checkFirstDay() async {
+  Future<void> checkFirstDay() async {
     bool isFirstDay = await _openingController.checkFirstDay();
     setState(() {
       isFirstDate = isFirstDay;

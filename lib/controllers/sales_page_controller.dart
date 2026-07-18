@@ -23,8 +23,19 @@ class SalesPageController {
     return data;
   }
 
+  Future<List<SalesEntryViewModel>> getSalesEntryModelData(
+    String date,
+    String shopId,
+  ) async {
+    List<SalesEntryViewModel> data = await _salesFirestoreRepo.getSalesEntryDoc(
+      date,
+      shopId,
+    );
+    return data;
+  }
+
   Future<void> addNewSales({
-    required SalesViewModel currentItem,
+    required SalesEntryViewModel currentItem,
     required int mobileNumber,
     required String currentDate,
     required int inputBottle,
@@ -52,12 +63,12 @@ class SalesPageController {
 
         String currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
 
-        // sales id
-        int lastSalesId = await _cache.getIntCacheFirebase(key: 'lastSalesId');
-        await _cache.addIntCacheFirebase('lastSalesId', lastSalesId + 1);
+        // // sales id
+        // int lastSalesId = await _cache.getIntCacheFirebase(key: 'lastSalesId');
+        // await _cache.addIntCacheFirebase('lastSalesId', lastSalesId + 1);
 
         SalesTableModel sales = SalesTableModel(
-          id: lastSalesId + 1,
+          id: currentItem.id,
           productId: currentItem.productId,
           phoneNumber: mobileNumber,
           date: currentDate,

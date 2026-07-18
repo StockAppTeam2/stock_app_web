@@ -23,6 +23,9 @@ class _ClosingStockPageState extends State<ClosingStockPage> {
   final _viewDateController = getIt<ViewDateController>();
   final _openingController = getIt<OpeningPageController>();
 
+  TextEditingController unScannedController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   String viewDate = '';
   String viewType = '';
   String query = '';
@@ -102,7 +105,7 @@ class _ClosingStockPageState extends State<ClosingStockPage> {
                                 maxCrossAxisExtent: 500,
                                 crossAxisSpacing: 8,
                                 mainAxisSpacing: 8,
-                                childAspectRatio: 2.3,
+                                childAspectRatio: 2.0,
                               ),
                           itemBuilder: (_, index) {
                             final product = products[index];
@@ -165,6 +168,17 @@ class _ClosingStockPageState extends State<ClosingStockPage> {
                                               fontSize: 18,
                                             ),
                                           ),
+                                          SizedBox(height: 10),
+                                          UnscannedButton(
+                                            controller: unScannedController,
+                                            closingStockData: product,
+                                            formKey: formKey,
+                                            onUpdated: (int value) {
+                                              setState(() {
+                                                product.unscannedEntry = value;
+                                              });
+                                            },
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -174,7 +188,7 @@ class _ClosingStockPageState extends State<ClosingStockPage> {
                                         children: [
                                           if (viewType ==
                                               CbViewType.cbCases.name)
-                                            buildOpeningCard(
+                                            buildClosingCard(
                                               title: 'CASES',
                                               value:
                                                   "${product.closingBundle == -1 ? '' : product.closingBundle}",
@@ -191,7 +205,7 @@ class _ClosingStockPageState extends State<ClosingStockPage> {
                                             ),
                                           if (viewType ==
                                               CbViewType.cbBottles.name)
-                                            buildOpeningCard(
+                                            buildClosingCard(
                                               title: 'BOTTLES',
                                               value:
                                                   "${product.closingRetail == -1 ? '' : product.closingRetail}",

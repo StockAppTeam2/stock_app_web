@@ -32,6 +32,7 @@ Future<bool> showDeleteDialog(BuildContext context, String productId) async {
               style: TextStyle(fontSize: 16),
             ),
 
+            actionsAlignment: MainAxisAlignment.spaceBetween,
             actions: [
               OutlinedButton.icon(
                 onPressed: () {

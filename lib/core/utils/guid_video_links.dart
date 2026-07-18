@@ -7,8 +7,15 @@ const reportsVideoLink = 'https://youtube.com/shorts/QJaO5k0appo?feature=share';
 const installVideoLink = 'https://youtube.com/shorts/FNIUTX9muSM?feature=share';
 const changePasswordVideoLink =
     'https://youtube.com/shorts/hJaEn7edxFc?si=TULxFmUC1xW04HBx';
-const salesVideoLink = 'https://youtu.be/oRUTSzIFSb4?si=mtzY-PtU3J7v3xot';
+// const salesVideoLink = 'https://youtu.be/oRUTSzIFSb4?si=mtzY-PtU3J7v3xot';
 const form49VideoLink =
     'https://youtube.com/shorts/Uf8LExS1mV8?si=nNJS-oUwNFB38JoQ';
 
 const stockChittaPage = 'https://www.youtube.com/@StockChittaTamil';
+
+const brandVideoLink = 'https://youtu.be/pb-YFRaq89I?si=xZk-NhvBEvFERKEm';
+
+const salesVideoLink = 'https://youtu.be/2ZPgzvhuyj4?si=kJ4XtPwxsT_QGI_1';
+
+const closingVideoLink =
+    'https://youtube.com/shorts/egkhjX34hsw?si=-PIlZEQLICinGhq7';

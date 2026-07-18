@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/repositories/brand_firestore_repo.dart';
@@ -268,6 +269,219 @@ class OpeningFirestoreRepo {
     Map<String, dynamic> itemsData = {};
 
     itemsData[data.productId.toString()] = data.toMap();
+
+    return itemsData;
+  }
+
+  Future<bool> checkClosingExist(String date) async {
+    String shopId = await cacheRepository.getStringCacheLocal(key: 'shopId');
+
+    DocumentReference itemsDocRef = FirebaseFirestore.instance
+        .collection(itemsCollection)
+        .doc(shopId)
+        .collection(dateSubCollection)
+        .doc(date);
+    DocumentSnapshot documentSnapshot = await itemsDocRef.get();
+
+    Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+
+    if (data.isEmpty) return true;
+
+    bool isClosingNotEntered = data.values.any(
+      (v) => v['totalCloseRetailUnits'] == -1,
+    );
+
+    print('isClosingNotEntered $isClosingNotEntered');
+    return !isClosingNotEntered;
+  }
+
+  Future<bool> checkClosingNotExist(String date) async {
+    String shopId = await cacheRepository.getStringCacheLocal(key: 'shopId');
+
+    DocumentReference itemsDocRef = FirebaseFirestore.instance
+        .collection(itemsCollection)
+        .doc(shopId)
+        .collection(dateSubCollection)
+        .doc(date);
+    DocumentSnapshot documentSnapshot = await itemsDocRef.get();
+
+    Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+
+    if (data.isEmpty) return true;
+
+    bool isClosingNotEntered = data.values.any(
+      (v) => v['totalCloseRetailUnits'] != -1,
+    );
+
+    print('isClosingNotEntered $isClosingNotEntered');
+    return isClosingNotEntered;
+  }
+
+  Future<List<String>> checkTodayYesterdayDataExist() async {
+    String shopId = await cacheRepository.getStringCacheLocal(key: 'shopId');
+    List<String> dates = [];
+
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+    String today = formatter.format(DateTime.now());
+    String yesterday = formatter.format(
+      DateTime.now().subtract(const Duration(days: 1)),
+    );
+
+    DocumentSnapshot todayDoc = await FirebaseFirestore.instance
+        .collection(itemsCollection)
+        .doc(shopId)
+        .collection(dateSubCollection)
+        .doc(today)
+        .get();
+
+    DocumentSnapshot yesterdayDoc = await FirebaseFirestore.instance
+        .collection(itemsCollection)
+        .doc(shopId)
+        .collection(dateSubCollection)
+        .doc(yesterday)
+        .get();
+
+    if (!todayDoc.exists) {
+      dates.add(today);
+    }
+    if (!yesterdayDoc.exists) {
+      dates.add(yesterday);
+    }
+
+    return dates;
+  }
+
+  Future<void> cbToOb(String lastDataExistDate, String obDate) async {
+    String shopId = await cacheRepository.getStringCacheLocal(key: 'shopId');
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection(itemsCollection)
+        .doc(shopId)
+        .collection(dateSubCollection)
+        .doc(lastDataExistDate)
+        .get();
+
+    if (!doc.exists) return;
+
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    if (data.isEmpty) return;
+
+    DocumentReference itemsDocRef = FirebaseFirestore.instance
+        .collection(itemsCollection)
+        .doc(shopId)
+        .collection(dateSubCollection)
+        .doc(obDate);
+
+    DocumentReference salesDocRef = FirebaseFirestore.instance
+        .collection(salesCollection)
+        .doc(shopId)
+        .collection(dateSubCollection)
+        .doc(obDate);
+
+    // items id
+    int lastItemsId = await cacheRepository.getIntCacheFirebase(
+      key: 'lastItemsId',
+    );
+
+    // sales id
+    int lastSalesId = await cacheRepository.getIntCacheFirebase(
+      key: 'lastSalesId',
+    );
+
+    // items
+    List<ItemsTableModel> itemsModelData = [];
+    List<SalesTableModel> salesModelData = [];
+
+    String currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+    String currentDate = DateTime.now().toString().substring(0, 10);
+
+    //change date add today item collection data
+    data.forEach((key, value) {
+      lastItemsId++;
+      ItemsTableModel newOpening = ItemsTableModel(
+        id: lastItemsId + 1,
+        productId: value['productId'],
+        phoneNumber: value['phoneNumber'],
+        date: currentDate,
+        time: currentTime,
+        openingBundle: value['closingBundle'],
+        openingRetail: value['closingRetail'],
+        actualBundle: value['closingBundle'],
+        actualRetail: value['closingRetail'],
+        closingBundle: -1,
+        closingRetail: -1,
+        totalOpenRetailUnits: value['totalCloseRetailUnits'],
+        totalCloseRetailUnits: -1,
+        totalActualRetailUnits: value['totalCloseRetailUnits'],
+        totalPriceOpening: value['totalPriceClosing'],
+        totalPriceClosing: -1,
+        totalPriceActual: value['totalPriceClosing'],
+        isSynced: 1,
+        unscannedEntry: 0,
+        checkOpeningCase: 0,
+        checkOpeningBottle: 0,
+        checkOpeningCaseBottle: 0,
+        checkClosingCase: 0,
+        checkClosingBottle: 0,
+        checkClosingCaseBottle: 0,
+        checkCurrentCase: 0,
+        checkCurrentBottle: 0,
+        checkCurrentCaseBottle: 0,
+      );
+      itemsModelData.add(newOpening);
+    });
+
+    await cacheRepository.addIntCacheFirebase('lastItemsId', lastItemsId + 1);
+    Map<String, dynamic> itemsMap = createItemsListDataMapForFirebase(
+      itemsModelData,
+    );
+
+    //change date add sales collection data
+    data.forEach((key, value) {
+      lastSalesId++;
+      SalesTableModel salesData = SalesTableModel(
+        id: lastSalesId + 1,
+        productId: value['productId'],
+        phoneNumber: value['phoneNumber'],
+        date: currentDate,
+        time: currentTime,
+        totalPriceSales: -1,
+        totalSalesRetailUnits: -1,
+        salesBundle: -1,
+        salesRetail: -1,
+        isSynced: 1,
+      );
+      salesModelData.add(salesData);
+    });
+
+    await cacheRepository.addIntCacheFirebase('lastSalesId', lastSalesId + 1);
+    Map<String, dynamic> salesMap = createSalesListDataMap(salesModelData);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      transaction.set(salesDocRef, salesMap, SetOptions(merge: true));
+      transaction.set(itemsDocRef, itemsMap, SetOptions(merge: true));
+    });
+  }
+
+  Map<String, dynamic> createItemsListDataMapForFirebase(
+    List<ItemsTableModel> data,
+  ) {
+    Map<String, dynamic> itemsData = {};
+
+    for (var item in data) {
+      itemsData[item.productId.toString()] = item.toMap();
+    }
+
+    return itemsData;
+  }
+
+  Map<String, dynamic> createSalesListDataMap(List<SalesTableModel> data) {
+    Map<String, dynamic> itemsData = {};
+
+    for (var item in data) {
+      itemsData[item.productId.toString()] = item.toMap();
+    }
 
     return itemsData;
   }

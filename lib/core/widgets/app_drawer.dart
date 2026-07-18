@@ -16,23 +16,23 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          DrawerHeader(
-            accountName: 'Mesavaraj',
-            accountEmail: 'mesavdev@gmiail.com',
-          ),
-          DrawerListTail(
-            title: 'HOME PAGE',
-            icon: Icons.home,
-            onTap: () async {
-              String shopId = await getIt<ShopIdController>().getShopId();
-              if (context.mounted) {
-                context.go('/$shopId/${AppRoutes.home}');
-              }
-            },
-          ),
+          // DrawerHeader(
+          //   accountName: 'Mesavaraj',
+          //   accountEmail: 'mesavdev@gmiail.com',
+          // ),
+          // DrawerListTail(
+          //   title: 'Home Page',
+          //   icon: Icons.home,
+          //   onTap: () async {
+          //     String shopId = await getIt<ShopIdController>().getShopId();
+          //     if (context.mounted) {
+          //       context.go('/$shopId/${AppRoutes.home}');
+          //     }
+          //   },
+          // ),
           Container(height: 1, color: Colors.black12),
           DrawerListTail(
-            title: 'VIEW DATE',
+            title: 'View Date',
             icon: Icons.date_range,
             onTap: () async {
               String shopId = await getIt<ShopIdController>().getShopId();
@@ -43,7 +43,7 @@ class AppDrawer extends StatelessWidget {
           ),
           Container(height: 1, color: Colors.black12),
           DrawerListTail(
-            title: "BRAND",
+            title: "Brand",
             icon: Icons.pending_actions_rounded,
             onTap: () async {
               String shopId = await getIt<ShopIdController>().getShopId();

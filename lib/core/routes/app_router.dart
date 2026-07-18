@@ -8,16 +8,22 @@ import 'package:stock_app_web/pages/brand/edit_brand_page.dart';
 import 'package:stock_app_web/pages/closing/add_closing_page.dart';
 import 'package:stock_app_web/pages/closing/closing_stock_page.dart';
 import 'package:stock_app_web/pages/closing/closing_view_type.dart';
+import 'package:stock_app_web/pages/closing/unscanned_closing_page.dart';
 import 'package:stock_app_web/pages/current/current_stock_page.dart';
 import 'package:stock_app_web/pages/form_49/form_49_page.dart';
 import 'package:stock_app_web/pages/home/home_page.dart';
 import 'package:stock_app_web/pages/indent_plan/indent_plan_page.dart';
+import 'package:stock_app_web/pages/last_year_sales_cumulative/add_last_year_sales_cumulative_page.dart';
+import 'package:stock_app_web/pages/last_year_sales_cumulative/last_year_sales_cumulative_folder_page.dart';
+import 'package:stock_app_web/pages/last_year_sales_cumulative/last_year_sales_cumulative_page.dart';
 import 'package:stock_app_web/pages/login/login_page.dart';
 import 'package:stock_app_web/pages/match_e2e_sales/match_e2e_sales_page.dart';
 import 'package:stock_app_web/pages/opening/add_opening_page.dart';
 import 'package:stock_app_web/pages/opening/edit_opening_page.dart';
 import 'package:stock_app_web/pages/opening/opening_stock_page.dart';
 import 'package:stock_app_web/pages/opening/opening_view_type.dart';
+import 'package:stock_app_web/pages/pos/add_pos_page.dart';
+import 'package:stock_app_web/pages/pos/edit_pos_page.dart';
 import 'package:stock_app_web/pages/pos/pos_monthly_folder_page.dart';
 import 'package:stock_app_web/pages/pos/pos_page.dart';
 import 'package:stock_app_web/pages/previous_day_cumulative/previous_day_cumulative_page.dart';
@@ -111,6 +117,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const AddClosingPage(),
     ),
     GoRoute(
+      path: '/:shopId/${AppRoutes.unscannedClosing}',
+      builder: (context, state) => const UnscannedClosingPage(),
+    ),
+    GoRoute(
       path: '/:shopId/${AppRoutes.receiptMonthlyFolder}',
       builder: (context, state) => const ReceiptMonthlyFolderPage(),
     ),
@@ -171,6 +181,17 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/:shopId/${AppRoutes.addPos}',
+      builder: (context, state) => const AddPosPage(),
+    ),
+    GoRoute(
+      path: '/:shopId/${AppRoutes.editPos}',
+      builder: (context, state) {
+        Map<String, dynamic> data = state.extra as Map<String, dynamic>;
+        return EditPosPage(posData: data['posData']);
+      },
+    ),
+    GoRoute(
       path: '/:shopId/${AppRoutes.posMonthlyFolder}',
       builder: (context, state) => const PosMonthlyFolderPage(),
     ),
@@ -227,6 +248,26 @@ final GoRouter appRouter = GoRouter(
       path: '/:shopId/${AppRoutes.supportPage}',
       builder: (context, state) {
         return SupportPage();
+      },
+    ),
+    GoRoute(
+      path: '/:shopId/${AppRoutes.lastYearSalesCumulativePage}',
+      builder: (context, state) {
+        Map<String, dynamic> data = state.extra as Map<String, dynamic>;
+
+        return LastYearSalesCumulativePage(monthAndYear: data['monthAndYear']);
+      },
+    ),
+    GoRoute(
+      path: '/:shopId/${AppRoutes.lastYearSalesCumulativeFolderPage}',
+      builder: (context, state) {
+        return LastYearSalesCumulativeFolderPage();
+      },
+    ),
+    GoRoute(
+      path: '/:shopId/${AppRoutes.addLastYearSalesCumulativePage}',
+      builder: (context, state) {
+        return AddLastYearSalesCumulativePage();
       },
     ),
   ],

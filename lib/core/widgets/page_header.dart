@@ -119,44 +119,78 @@ class PageHeader extends StatelessWidget {
             title: "Add Last Year Cumulative",
             icon: Icons.add,
             onPressed: () async {
-              //
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go(
+                  '/$shopId/${AppRoutes.lastYearSalesCumulativeFolderPage}',
+                );
+              }
             },
           ),
         if (page == 'opening_stock')
-          AppButton(
-            title: "View OB + Receipt",
-            icon: Icons.receipt_long,
-            onPressed: () {
-              context.go(AppRoutes.currentStock);
+          ElevatedButton(
+            onPressed: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.currentStock}');
+              }
             },
+            style: ElevatedButton.styleFrom(
+              // backgroundColor: Colors.pink,
+              foregroundColor: Colors.green,
+            ),
+            child: FittedBox(child: Text('View OB + Receipt')),
           ),
         if (page == 'closing_stock')
-          AppButton(
-            title: "Total Unscanned",
-            icon: Icons.receipt_long,
-            onPressed: () {
-              //
+          ElevatedButton(
+            onPressed: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.unscannedClosing}');
+              }
             },
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.green),
+            child: FittedBox(child: Text('Total Unscanned')),
           ),
-        if (page == 'sales_stock')
+
+        if (page == 'add_sales_stock')
           AppButton(
             title: "view O - S = CB",
             icon: Icons.receipt_long,
-            onPressed: () {
-              //
+            onPressed: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.salesStock}');
+              }
             },
           ),
-        if (page == 'brand_stock')
-          AppButton(
-            title: "Add New Brand",
-            icon: Icons.receipt_long,
+        if (page == 'pos_stock')
+          ElevatedButton(
+            onPressed: () async {
+              String shopId = await getIt<ShopIdController>().getShopId();
+              if (context.mounted) {
+                context.go('/$shopId/${AppRoutes.addPos}');
+              }
+            },
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.green),
+            child: Row(children: [Text('Add POS'), Icon(Icons.add)]),
+          ),
+        if (page == 'brand_stock' || page == 'add_purchase_stock')
+          ElevatedButton.icon(
             onPressed: () async {
               String shopId = await getIt<ShopIdController>().getShopId();
               if (context.mounted) {
                 context.go('/$shopId/${AppRoutes.addBrandStock}');
               }
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.pink,
+              foregroundColor: Colors.white,
+            ),
+            label: Text('Add New Brand'),
+            icon: Icon(Icons.add),
           ),
+
         if (videoLink != '') YoutubeButton(url: videoLink),
       ],
     );

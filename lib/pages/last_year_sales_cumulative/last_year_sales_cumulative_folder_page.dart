@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:stock_app_web/controllers/opening_page_controller.dart';
-import 'package:stock_app_web/controllers/receipt_controller.dart';
+import 'package:stock_app_web/controllers/last_year_sales_cumulative_controller.dart';
 import 'package:stock_app_web/controllers/shop_id_controller.dart';
-import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
-import 'package:stock_app_web/pages/receipt/widget/today_sales_completed_popup.dart';
-import 'package:stock_app_web/pages/widgets/youtube_button.dart';
 
-class ReceiptMonthlyFolderPage extends StatefulWidget {
-  const ReceiptMonthlyFolderPage({super.key});
+class LastYearSalesCumulativeFolderPage extends StatefulWidget {
+  const LastYearSalesCumulativeFolderPage({super.key});
 
   @override
-  State<ReceiptMonthlyFolderPage> createState() =>
-      _ReceiptMonthlyFolderPageState();
+  State<LastYearSalesCumulativeFolderPage> createState() =>
+      _LastYearSalesCumulativeFolderPageState();
 }
 
-class _ReceiptMonthlyFolderPageState extends State<ReceiptMonthlyFolderPage> {
-  final _receiptController = getIt<ReceiptController>();
-  final _viewDateController = getIt<ViewDateController>();
-
-  String viewDate = '';
-
-  @override
-  void initState() {
-    super.initState();
-    getViewDate();
-  }
-
-  void getViewDate() async {
-    String value = await _viewDateController.getViewDateForUi();
-    print('viewdate: $value');
-    if (mounted) {
-      setState(() => viewDate = value);
-    }
-  }
+class _LastYearSalesCumulativeFolderPageState
+    extends State<LastYearSalesCumulativeFolderPage> {
+  final _lastYearSalesCumulativeController =
+      getIt<LastYearSalesCumulativeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,25 +26,16 @@ class _ReceiptMonthlyFolderPageState extends State<ReceiptMonthlyFolderPage> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              YoutubeButton(
-                url: 'https://youtu.be/Xd5JtQK7cQ0?si=ycrnNssjHvpF929C',
-              ),
-              SizedBox(width: 15),
+              Text('Last Year Details', style: TextStyle(fontSize: 20)),
               ElevatedButton(
                 onPressed: () async {
-                  bool checkTodayClosingExist = await _receiptController
-                      .checkClosingNotExist(viewDate);
-
-                  if (!checkTodayClosingExist) {
-                    String shopId = await getIt<ShopIdController>().getShopId();
-                    if (!context.mounted) return;
-                    context.go('/$shopId/${AppRoutes.addReceiptStock}');
-                  } else {
-                    if (!context.mounted) return;
-                    todaySalesCompleted(context);
-                  }
+                  String shopId = await getIt<ShopIdController>().getShopId();
+                  if (!context.mounted) return;
+                  context.go(
+                    '/$shopId/${AppRoutes.addLastYearSalesCumulativePage}',
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -72,14 +44,14 @@ class _ReceiptMonthlyFolderPageState extends State<ReceiptMonthlyFolderPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Row(children: [Text('Add Purchase'), Icon(Icons.add)]),
+                child: Row(children: [Text('Add Cumulative'), Icon(Icons.add)]),
               ),
             ],
           ),
           SizedBox(height: 20),
           Expanded(
             child: FutureBuilder<List<String>>(
-              future: getReceiptDates(),
+              future: getLastYearSalesCumulativeMonths(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -89,18 +61,18 @@ class _ReceiptMonthlyFolderPageState extends State<ReceiptMonthlyFolderPage> {
                   return Center(child: Text(snapshot.error.toString()));
                 }
 
-                final receiptDates = snapshot.data ?? [];
+                final cumulativeDates = snapshot.data ?? [];
 
-                if (receiptDates.isEmpty) {
+                if (cumulativeDates.isEmpty) {
                   return const Center(child: Text("No Data Found"));
                 }
 
                 return ListView.builder(
-                  itemCount: receiptDates.length,
+                  itemCount: cumulativeDates.length,
                   itemBuilder: (BuildContext context, int index) {
                     DateTime date = DateFormat(
                       'yyyy-MM',
-                    ).parse(receiptDates[index]);
+                    ).parse(cumulativeDates[index]);
                     String output = DateFormat('MMMM yyyy').format(date);
 
                     return Card(
@@ -115,8 +87,8 @@ class _ReceiptMonthlyFolderPageState extends State<ReceiptMonthlyFolderPage> {
 
                             if (!context.mounted) return;
                             context.go(
-                              '/$shopId/${AppRoutes.receiptDailyFolder}',
-                              extra: {'monthAndYear': receiptDates[index]},
+                              '/$shopId/${AppRoutes.lastYearSalesCumulativePage}',
+                              extra: {'monthAndYear': cumulativeDates[index]},
                             );
                           },
                         ),
@@ -132,8 +104,9 @@ class _ReceiptMonthlyFolderPageState extends State<ReceiptMonthlyFolderPage> {
     );
   }
 
-  Future<List<String>> getReceiptDates() async {
-    List<String> dates = await _receiptController.getReceiptMonths();
+  Future<List<String>> getLastYearSalesCumulativeMonths() async {
+    List<String> dates = await _lastYearSalesCumulativeController
+        .getLastYearCumulativeMonths();
     return dates;
   }
 }

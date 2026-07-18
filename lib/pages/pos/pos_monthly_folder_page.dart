@@ -5,7 +5,7 @@ import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
-import 'package:stock_app_web/pages/widgets/youtube_button.dart';
+import 'package:stock_app_web/core/widgets/page_header.dart';
 
 class PosMonthlyFolderPage extends StatefulWidget {
   const PosMonthlyFolderPage({super.key});
@@ -22,16 +22,17 @@ class _PosMonthlyFolderPageState extends State<PosMonthlyFolderPage> {
     return AppNavigatorWrapper(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              YoutubeButton(url: ''),
-              ElevatedButton(
-                onPressed: () {},
-                child: Row(children: [Text('Add POS'), Icon(Icons.add)]),
-              ),
-            ],
+          PageHeader(
+            title: 'POS DETAILS',
+            viewDate: '',
+            query: (String p1) {},
+            videoLink: '',
+            page: 'pos_stock',
+            invoiceNo: '',
+            showReport: false,
           ),
+
+          SizedBox(height: 10),
           Expanded(
             child: FutureBuilder<List<String>>(
               future: getPosDates(),
@@ -59,11 +60,15 @@ class _PosMonthlyFolderPageState extends State<PosMonthlyFolderPage> {
                         child: ListTile(
                           title: Text(posDates[index]),
                           trailing: const Icon(Icons.navigate_next),
-                          onTap: () {
-                            context.go(
-                              AppRoutes.pos,
-                              extra: {'monthAndYear': posDates[index]},
-                            );
+                          onTap: () async {
+                            String shopId = await getIt<ShopIdController>()
+                                .getShopId();
+                            if (context.mounted) {
+                              context.go(
+                                '/$shopId/${AppRoutes.pos}',
+                                extra: {'monthAndYear': posDates[index]},
+                              );
+                            }
                           },
                         ),
                       ),

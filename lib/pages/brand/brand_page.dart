@@ -4,6 +4,7 @@ import 'package:stock_app_web/controllers/brand_controller.dart';
 import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/routes/app_routes.dart';
+import 'package:stock_app_web/core/utils/guid_video_links.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
 import 'package:stock_app_web/models/brand_model.dart';
@@ -59,7 +60,7 @@ class _BrandPageState extends State<BrandPage> {
               query: (String query) {
                 search(query);
               },
-              videoLink: '',
+              videoLink: brandVideoLink,
               page: 'brand_stock',
               invoiceNo: '',
               showReport: true,

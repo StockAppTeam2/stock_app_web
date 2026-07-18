@@ -5,6 +5,7 @@ import 'package:stock_app_web/controllers/opening_page_controller.dart';
 import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/utils/guid_video_links.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/core/widgets/page_header.dart';
 import 'package:stock_app_web/models/items_table_model.dart';
@@ -36,6 +37,8 @@ class _AddClosingPageState extends State<AddClosingPage> {
   bool _isSaveLoading = false;
 
   bool _isLoading = true;
+
+  bool startEntry = false;
 
   List<ItemsViewModel> products = [];
   List<ItemsViewModel> filterData = [];
@@ -70,7 +73,7 @@ class _AddClosingPageState extends State<AddClosingPage> {
                   updateFuture();
                 });
               },
-              videoLink: '',
+              videoLink: closingVideoLink,
               page: 'add_closing_stock',
               invoiceNo: '',
               showReport: true,
@@ -88,311 +91,307 @@ class _AddClosingPageState extends State<AddClosingPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     Container(
-                    //       padding: const EdgeInsets.all(5),
-                    //       color: Colors.black54,
-                    //       child: Row(
-                    //         children: [
-                    //           const Text(
-                    //             ' Case: ',
-                    //             style: TextStyle(
-                    //               fontSize: 20,
-                    //               color: Colors.greenAccent,
-                    //               fontWeight: FontWeight.bold,
-                    //             ),
-                    //           ),
-                    //           if (currentItem != null)
-                    //             SizedBox(
-                    //               width: 40,
-                    //               child: Text(
-                    //                 '${(currentItem?.actualBundle ?? 0) != -1 ? currentItem!.actualBundle : ''}',
-                    //                 style: const TextStyle(
-                    //                   fontSize: 20,
-                    //                   color: Colors.yellowAccent,
-                    //                   fontWeight: FontWeight.bold,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           const SizedBox(width: 10),
-                    //           const Text(
-                    //             'Btl: ',
-                    //             style: TextStyle(
-                    //               fontSize: 20,
-                    //               color: Colors.greenAccent,
-                    //               fontWeight: FontWeight.bold,
-                    //             ),
-                    //           ),
-                    //           if (currentItem != null)
-                    //             SizedBox(
-                    //               width: 40,
-                    //               child: Text(
-                    //                 '${(currentItem?.actualRetail ?? 0) != -1 ? currentItem?.actualRetail : ''}',
-                    //
-                    //                 style: const TextStyle(
-                    //                   fontSize: 20,
-                    //                   color: Colors.yellowAccent,
-                    //                   fontWeight: FontWeight.bold,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           const Text(
-                    //             '( ',
-                    //             style: TextStyle(
-                    //               fontSize: 20,
-                    //               color: Colors.greenAccent,
-                    //               fontWeight: FontWeight.bold,
-                    //             ),
-                    //           ),
-                    //           if (currentItem != null)
-                    //             Text(
-                    //               '${(currentItem?.totalActualRetailUnits ?? 0) != -1 ? currentItem!.totalActualRetailUnits : ''}',
-                    //
-                    //               style: const TextStyle(
-                    //                 fontSize: 20,
-                    //                 color: Colors.yellowAccent,
-                    //                 fontWeight: FontWeight.bold,
-                    //               ),
-                    //             ),
-                    //           const Text(
-                    //             ' )',
-                    //             style: TextStyle(
-                    //               fontSize: 20,
-                    //               color: Colors.greenAccent,
-                    //               fontWeight: FontWeight.bold,
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                    startEntry
+                        ? Column(
                             children: [
-                              TextSpan(
-                                text: '${currentItem!.productId} - ',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '${currentItem!.brand} - ',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '${currentItem!.range} - ',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "${currentItem!.size} - ",
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Rs.${currentItem!.price.toString()}",
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          color: Colors.black54,
-                          child: Row(
-                            children: [
-                              const Text(
-                                ' Case: ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.greenAccent,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              if (currentItem != null)
-                                SizedBox(
-                                  width: 40,
-                                  child: Text(
-                                    '${(currentItem?.actualBundle ?? 0) != -1 ? currentItem!.actualBundle : ''}',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.yellowAccent,
-                                      fontWeight: FontWeight.bold,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: '${currentItem!.productId} - ',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '${currentItem!.brand} - ',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '${currentItem!.range} - ',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "${currentItem!.size} - ",
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              "Rs.${currentItem!.price.toString()}",
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              const SizedBox(width: 10),
-                              const Text(
-                                'Btl: ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.greenAccent,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              if (currentItem != null)
-                                SizedBox(
-                                  width: 40,
-                                  child: Text(
-                                    '${(currentItem?.actualRetail ?? 0) != -1 ? currentItem?.actualRetail : ''}',
+                                  Container(
+                                    padding: const EdgeInsets.all(5),
+                                    color: Colors.black54,
+                                    child: Row(
+                                      children: [
+                                        const Text(
+                                          ' Case: ',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        if (currentItem != null)
+                                          SizedBox(
+                                            width: 40,
+                                            child: Text(
+                                              '${(currentItem?.actualBundle ?? 0) != -1 ? currentItem!.actualBundle : ''}',
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.yellowAccent,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        const SizedBox(width: 10),
+                                        const Text(
+                                          'Btl: ',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        if (currentItem != null)
+                                          SizedBox(
+                                            width: 40,
+                                            child: Text(
+                                              '${(currentItem?.actualRetail ?? 0) != -1 ? currentItem?.actualRetail : ''}',
 
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.yellowAccent,
-                                      fontWeight: FontWeight.bold,
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.yellowAccent,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        const Text(
+                                          '( ',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        if (currentItem != null)
+                                          Text(
+                                            '${(currentItem?.totalActualRetailUnits ?? 0) != -1 ? currentItem!.totalActualRetailUnits : ''}',
+
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.yellowAccent,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        const Text(
+                                          ' )',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              const Text(
-                                '( ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.greenAccent,
-                                  fontWeight: FontWeight.bold,
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              Form(
+                                key: _formKey,
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: TextFormField(
+                                        focusNode: _focusNode,
+                                        controller: bundleController,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]'),
+                                          ),
+                                        ],
+                                        validator: (value) {
+                                          final number = int.tryParse(
+                                            value ?? '',
+                                          );
+
+                                          if (number == null ||
+                                              number.isNegative) {
+                                            return 'Please Check value';
+                                          }
+
+                                          if (number >
+                                              currentItem!.actualBundle) {
+                                            return 'Please Check Case';
+                                          }
+
+                                          return null;
+                                        },
+
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        decoration: const InputDecoration(
+                                          hintText: 'Enter Case',
+                                          labelText: 'Case',
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.red,
+                                              width: 5.0,
+                                            ),
+                                          ),
+                                        ),
+                                        onFieldSubmitted: (_) {
+                                          FocusScope.of(
+                                            context,
+                                          ).requestFocus(_bottleFocusNode);
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: TextFormField(
+                                        focusNode: _bottleFocusNode,
+                                        controller: retailController,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]'),
+                                          ),
+                                        ],
+                                        onFieldSubmitted: (v) async {
+                                          await addClosing();
+                                        },
+                                        validator: (value) {
+                                          final number = int.tryParse(
+                                            value ?? '',
+                                          );
+
+                                          if (number == null ||
+                                              number.isNegative) {
+                                            return 'Please Check value';
+                                          }
+
+                                          if (number >
+                                              currentItem!
+                                                  .totalActualRetailUnits) {
+                                            return 'Please Check Bottles';
+                                          }
+
+                                          return null;
+                                        },
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        decoration: const InputDecoration(
+                                          hintText: 'Enter Bottles',
+                                          labelText: 'Bottles',
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.red,
+                                              width: 5.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              if (currentItem != null)
-                                Text(
-                                  '${(currentItem?.totalActualRetailUnits ?? 0) != -1 ? currentItem!.totalActualRetailUnits : ''}',
-
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.yellowAccent,
-                                    fontWeight: FontWeight.bold,
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      foregroundColor: Colors.white,
+                                      fixedSize: Size(160, 40),
+                                    ),
+                                    onPressed: _isSaveLoading
+                                        ? null
+                                        : () {
+                                            previousItem();
+                                          },
+                                    child: const Text('Back'),
                                   ),
-                                ),
-                              const Text(
-                                ' )',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.greenAccent,
-                                  fontWeight: FontWeight.bold,
-                                ),
+
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      foregroundColor: Colors.white,
+                                      fixedSize: Size(160, 40),
+                                    ),
+                                    onPressed: _isSaveLoading
+                                        ? null
+                                        : () async {
+                                            await addClosing();
+                                          },
+                                    child: _isSaveLoading
+                                        ? const CircularProgressIndicator(
+                                            color: Colors.white,
+                                          )
+                                        : const Text('Save & Next'),
+                                  ),
+                                ],
                               ),
                             ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Form(
-                      key: _formKey,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              controller: bundleController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]'),
-                                ),
-                              ],
-                              validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    !isNumeric(value)) {
-                                  return 'Case Con\'t Be Empty';
-                                }
-                                return null;
-                              },
+                          )
+                        : Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                retailController.text =
+                                    currentItem!.closingRetail != -1
+                                    ? currentItem!.closingRetail.toString()
+                                    : '';
+                                bundleController.text =
+                                    currentItem!.closingBundle != -1
+                                    ? currentItem!.closingBundle.toString()
+                                    : '';
 
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
+                                _focusNode.requestFocus();
+                                setState(() {
+                                  startEntry = true;
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(140, 50),
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.green,
                               ),
-                              decoration: const InputDecoration(
-                                hintText: 'Enter Case',
-                                labelText: 'Case',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.red,
-                                    width: 5.0,
-                                  ),
-                                ),
-                              ),
-                              onEditingComplete: nextField,
+                              child: Text('Start'),
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextFormField(
-                              focusNode: _bottleFocusNode,
-                              controller: retailController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]'),
-                                ),
-                              ],
-                              onFieldSubmitted: (v) async {
-                                await addClosing();
-                              },
-                              validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    !isNumeric(value)) {
-                                  return 'Bottles Con\'t Be Empty';
-                                }
-                                return null;
-                              },
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              decoration: const InputDecoration(
-                                hintText: 'Enter Bottles',
-                                labelText: 'Bottles',
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.red,
-                                    width: 5.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          fixedSize: Size(160, 40),
-                        ),
-                        onPressed: _isSaveLoading
-                            ? null
-                            : () async {
-                                await addClosing();
-                              },
-                        child: _isSaveLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : const Text('Save'),
-                      ),
-                    ),
+
                     const SizedBox(height: 20),
                     Expanded(
                       child: GridView.builder(
@@ -477,6 +476,9 @@ class _AddClosingPageState extends State<AddClosingPage> {
                                           item: product,
                                           width: 100,
                                           onEdit: () {
+                                            setState(() {
+                                              startEntry = true;
+                                            });
                                             currentItem = product;
 
                                             retailController.text =
@@ -653,6 +655,21 @@ class _AddClosingPageState extends State<AddClosingPage> {
   }
 
   void nextField() {
-    FocusScope.of(context).nextFocus();
+    FocusScope.of(context).requestFocus(_bottleFocusNode);
+  }
+
+  void previousItem() {
+    final index = products.indexWhere((e) => e.id == currentItem!.id);
+
+    if (index > 0) {
+      currentItem = products[index - 1];
+
+      retailController.text = currentItem!.totalCloseRetailUnits != -1
+          ? currentItem!.totalCloseRetailUnits.toString()
+          : '';
+
+      setState(() {});
+      _focusNode.requestFocus();
+    }
   }
 }

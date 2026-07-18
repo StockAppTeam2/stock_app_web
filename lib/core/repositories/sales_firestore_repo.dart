@@ -92,6 +92,86 @@ class SalesFirestoreRepo {
     return [];
   }
 
+  Future<List<SalesEntryViewModel>> getSalesEntryDoc(
+    String date,
+    String shopId,
+  ) async {
+    try {
+      List<SalesEntryViewModel> valuesList = [];
+
+      DocumentSnapshot documentSnapshot = await firestoreService
+          .getSubCollectionDocument(
+            collection: 'sales',
+            shopId: shopId,
+            subCollection: 'date',
+            docId: date,
+          );
+
+      DocumentSnapshot itemDocumentSnapshot = await firestoreService
+          .getSubCollectionDocument(
+            collection: 'items',
+            shopId: shopId,
+            subCollection: 'date',
+            docId: date,
+          );
+
+      if (!documentSnapshot.exists) return [];
+      if (!itemDocumentSnapshot.exists) return [];
+
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic> itemData =
+          itemDocumentSnapshot.data() as Map<String, dynamic>;
+
+      if (data.isEmpty) return [];
+      if (itemData.isEmpty) return [];
+
+      List<BrandModel> brandData = await _brandFirestoreRepo.getBrandCollection(
+        shopId,
+      );
+
+      Map<String, Map<String, dynamic>> itemLookup = {};
+
+      itemData.forEach((key, value) {
+        final itemMap = Map<String, dynamic>.from(value);
+
+        if (itemMap['actualBundle'] != 0 || itemMap['actualRetail'] != 0) {
+          itemLookup[itemMap['productId'].toString()] = itemMap;
+        }
+      });
+
+      // print('dataExitProduct $dataExitProduct');
+
+      data.forEach((key, value) {
+        final salesMap = Map<String, dynamic>.from(value);
+
+        final productId = salesMap['productId'].toString();
+
+        if (itemLookup.containsKey(productId)) {
+          // Add brand data
+          try {
+            final brand = brandData.firstWhere(
+              (e) => e.productId.toString() == productId,
+            );
+            salesMap.addAll(brand.toMap());
+          } catch (_) {}
+
+          // Add item data
+          print('itemLookup[productId]! ${itemLookup[productId]!}');
+          salesMap.addAll(itemLookup[productId]!);
+
+          print('salesMap $salesMap');
+
+          valuesList.add(SalesEntryViewModel.fromMap(salesMap));
+        }
+      });
+      return valuesList;
+    } catch (e) {
+      print('sales error: $e');
+    }
+    return [];
+  }
+
   Future<void> addNewSales({
     required SalesTableModel sales,
     required ItemsTableModel item,

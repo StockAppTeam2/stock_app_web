@@ -10,12 +10,17 @@ Widget buildStockSummaryDataTable(List<List<String>> rowData) {
 
             child: DataTable(
               border: TableBorder.all(),
-              columns: const [DataColumn(label: Text(''))],
+              columns: const [
+                DataColumn(label: Text('', style: TextStyle(fontSize: 17))),
+              ],
               rows: rowData.map((row) {
                 return DataRow(
                   cells: [
                     DataCell(
-                      Text(row[0], style: TextStyle(color: Colors.blue[900])),
+                      Text(
+                        row[0],
+                        style: TextStyle(color: Colors.blue[900], fontSize: 17),
+                      ),
                     ),
                   ],
                 );
@@ -35,7 +40,7 @@ Widget buildStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '180 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
                   ),
@@ -45,7 +50,7 @@ Widget buildStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '375 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.green,
                   ),
@@ -55,7 +60,7 @@ Widget buildStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '750 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.purpleAccent,
                   ),
@@ -65,7 +70,7 @@ Widget buildStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '1000 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.pink,
                   ),
@@ -74,14 +79,14 @@ Widget buildStockSummaryDataTable(List<List<String>> rowData) {
               const DataColumn(
                 label: Text(
                   'TOTAL',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
               ),
               DataColumn(
                 label: Text(
                   'RUPEES',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue[900],
                   ),
@@ -108,12 +113,17 @@ Widget buildStockSummaryDataTableIMFL(List<List<String>> rowData) {
 
             child: DataTable(
               border: TableBorder.all(),
-              columns: const [DataColumn(label: Text(''))],
+              columns: const [
+                DataColumn(label: Text('', style: TextStyle(fontSize: 17))),
+              ],
               rows: rowData.map((row) {
                 return DataRow(
                   cells: [
                     DataCell(
-                      Text(row[0], style: TextStyle(color: Colors.blue[900])),
+                      Text(
+                        row[0],
+                        style: TextStyle(color: Colors.blue[900], fontSize: 17),
+                      ),
                     ),
                   ],
                 );
@@ -133,7 +143,7 @@ Widget buildStockSummaryDataTableIMFL(List<List<String>> rowData) {
                 label: Text(
                   '180 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
                   ),
@@ -143,7 +153,7 @@ Widget buildStockSummaryDataTableIMFL(List<List<String>> rowData) {
                 label: Text(
                   '375 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.green,
                   ),
@@ -153,7 +163,7 @@ Widget buildStockSummaryDataTableIMFL(List<List<String>> rowData) {
                 label: Text(
                   '750 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.purpleAccent,
                   ),
@@ -163,7 +173,7 @@ Widget buildStockSummaryDataTableIMFL(List<List<String>> rowData) {
                 label: Text(
                   '1000 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.pink,
                   ),
@@ -172,14 +182,14 @@ Widget buildStockSummaryDataTableIMFL(List<List<String>> rowData) {
               const DataColumn(
                 label: Text(
                   'TOTAL',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
               ),
               DataColumn(
                 label: Text(
                   'RUPEES',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue[900],
                   ),
@@ -206,12 +216,17 @@ Widget buildBeerStockSummaryDataTable(List<List<String>> rowData) {
 
             child: DataTable(
               border: TableBorder.all(),
-              columns: const [DataColumn(label: Text(''))],
+              columns: const [
+                DataColumn(label: Text('', style: TextStyle(fontSize: 17))),
+              ],
               rows: rowData.map((row) {
                 return DataRow(
                   cells: [
                     DataCell(
-                      Text(row[0], style: TextStyle(color: Colors.blue[900])),
+                      Text(
+                        row[0],
+                        style: TextStyle(color: Colors.blue[900], fontSize: 17),
+                      ),
                     ),
                   ],
                 );
@@ -230,7 +245,7 @@ Widget buildBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '650 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.teal,
                   ),
@@ -240,7 +255,7 @@ Widget buildBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '500 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.orange,
                   ),
@@ -250,7 +265,7 @@ Widget buildBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '325 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.deepOrange,
                   ),
@@ -259,14 +274,14 @@ Widget buildBeerStockSummaryDataTable(List<List<String>> rowData) {
               const DataColumn(
                 label: Text(
                   'TOTAL',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
               ),
               DataColumn(
                 label: Text(
                   'RUPEES',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue[900],
                   ),
@@ -290,16 +305,21 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
       Column(
         children: [
           SizedBox(
-            width: 130,
+            width: 120,
 
             child: DataTable(
               border: TableBorder.all(),
-              columns: const [DataColumn(label: Text(''))],
+              columns: const [
+                DataColumn(label: Text('', style: TextStyle(fontSize: 17))),
+              ],
               rows: rowData.map((row) {
                 return DataRow(
                   cells: [
                     DataCell(
-                      Text(row[0], style: TextStyle(color: Colors.blue[900])),
+                      Text(
+                        row[0],
+                        style: TextStyle(color: Colors.blue[900], fontSize: 17),
+                      ),
                     ),
                   ],
                 );
@@ -318,7 +338,7 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '180 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
                   ),
@@ -329,7 +349,7 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '375 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.green,
                   ),
@@ -340,7 +360,7 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '750 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.purpleAccent,
                   ),
@@ -350,7 +370,7 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '1000 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.pink,
                   ),
@@ -360,7 +380,7 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '650 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.teal,
                   ),
@@ -370,7 +390,7 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '500 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.orange,
                   ),
@@ -380,7 +400,7 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
                 label: Text(
                   '325 ml',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.deepOrange,
                   ),
@@ -389,14 +409,14 @@ Widget buildImflAndBeerStockSummaryDataTable(List<List<String>> rowData) {
               const DataColumn(
                 label: Text(
                   'TOTAL',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
               ),
               DataColumn(
                 label: Text(
                   'RUPEES',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue[900],
                   ),
@@ -445,7 +465,7 @@ List<DataCell> _buildDataCells(List<String> cells) {
     return DataCell(
       Text(
         int.parse(cell).isNegative ? '0' : cell,
-        style: TextStyle(color: cellColor),
+        style: TextStyle(color: cellColor, fontSize: 17),
       ),
     );
   }).toList();
@@ -480,7 +500,7 @@ List<DataCell> _buildBeerDataCells(List<String> cells) {
     return DataCell(
       Text(
         int.parse(cell).isNegative ? '0' : cell,
-        style: TextStyle(color: cellColor),
+        style: TextStyle(color: cellColor, fontSize: 17),
       ),
     );
   }).toList();
@@ -527,7 +547,7 @@ List<DataCell> _buildImflAndBeerDataCells(List<String> cells) {
     return DataCell(
       Text(
         int.parse(cell).isNegative ? '0' : cell,
-        style: TextStyle(color: cellColor),
+        style: TextStyle(color: cellColor, fontSize: 17),
       ),
     );
   }).toList();

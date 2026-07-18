@@ -446,4 +446,9 @@ class ReceiptController {
       showErrorToast('No Internet Connection');
     }
   }
+
+  Future<bool> checkClosingNotExist(String viewDate) async {
+    bool isExist = await _openingFireRepo.checkClosingNotExist(viewDate);
+    return isExist;
+  }
 }

@@ -14,6 +14,7 @@ class AppRoutes {
   static const String closingViewType = 'closingViewType';
   static const String closingStock = 'closingStock';
   static const String addClosingStock = 'addClosingStock';
+  static const String unscannedClosing = 'unscannedClosing';
 
   static const String receiptMonthlyFolder = 'receiptMonthlyFolder';
   static const String receiptDailyFolder = 'receiptDailyFolder';
@@ -36,6 +37,8 @@ class AppRoutes {
 
   static const String pos = 'pos';
   static const String posMonthlyFolder = 'posMonthlyFolder';
+  static const String addPos = 'addPos';
+  static const String editPos = 'editPos';
 
   static const String pvReport = 'pvReport';
 
@@ -56,4 +59,10 @@ class AppRoutes {
   static const String matchE2ESalesPage = 'matchE2ESalesPage';
 
   static const String supportPage = 'supportPage';
+
+  static const lastYearSalesCumulativePage = 'lastYearSalesCumulativePage';
+  static const lastYearSalesCumulativeFolderPage =
+      'lastYearSalesCumulativeFolderPage';
+  static const addLastYearSalesCumulativePage =
+      'addLastYearSalesCumulativePage';
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/controllers/sms_controller.dart';
+import 'package:stock_app_web/controllers/view_date_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/widgets/app_navigator_wrapper.dart';
 import 'package:stock_app_web/pages/sms/sms_page_widgets.dart';
+import 'package:stock_app_web/pages/widgets/toast_popup.dart';
 
 class SmsPage extends StatefulWidget {
   const SmsPage({super.key});
@@ -14,10 +17,14 @@ class SmsPage extends StatefulWidget {
 
 class _SmsPageState extends State<SmsPage> {
   final smsController = getIt<SmsController>();
+  final _viewDateController = getIt<ViewDateController>();
 
   bool removeSmsFirstStar = false;
   bool removeSmsEndStar = false;
   String formattedSmsText = '';
+
+  int? shopId;
+  String? smsDate;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +33,28 @@ class _SmsPageState extends State<SmsPage> {
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('SMS', style: TextStyle(fontSize: 20)),
+                ElevatedButton(
+                  onPressed: () {
+                    final textToShare = removeSmsFirstStar
+                        ? "$shopId*$smsDate$formattedSmsText"
+                        : "*$shopId*$smsDate$formattedSmsText";
+
+                    Clipboard.setData(ClipboardData(text: textToShare));
+
+                    showSuccessToast('Sms Copied');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green,
+                  ),
+                  child: Text('Prepare SMS', style: TextStyle(fontSize: 18)),
+                ),
+              ],
+            ),
             Expanded(
               child: FutureBuilder<List<dynamic>>(
                 future: getData(),
@@ -91,22 +120,6 @@ class _SmsPageState extends State<SmsPage> {
                                 }),
                               ],
                             ),
-                            // Table(
-                            //   columnWidths: {
-                            //     0: FixedColumnWidth(width * 0.20),
-                            //     1: FixedColumnWidth(width * 0.05),
-                            //     2: FixedColumnWidth(width * 0.50),
-                            //   },
-                            //   children: products.map((data) {
-                            //     return TableRow(
-                            //       children: [
-                            //         nameText(data[1]),
-                            //         colonText(),
-                            //         valueText(data[0]),
-                            //       ],
-                            //     );
-                            //   }).toList(),
-                            // ),
                           ],
                         ),
                       );
@@ -172,6 +185,11 @@ class _SmsPageState extends State<SmsPage> {
       // });
       // }
       print('formattedSmsText $formattedSmsText');
+      String value = await _viewDateController.getViewDateForUi();
+
+      this.shopId = int.parse(shopId);
+      smsDate = value;
+
       return arrangedList;
     }
     return [

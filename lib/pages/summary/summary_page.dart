@@ -49,127 +49,228 @@ class _SummaryPageState extends State<SummaryPage> {
                         const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
+                            horizontal: 16,
                             vertical: 10,
                           ),
                           child: Table(
                             columnWidths: const {
                               0: FlexColumnWidth(6),
                               1: FlexColumnWidth(1),
-                              2: FlexColumnWidth(4),
+                              2: FlexColumnWidth(3),
                             },
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
                             children: List.generate(salesData.length, (index) {
                               final item = salesData[index];
-                              return index == salesData.length - 1
-                                  ? TableRow(
-                                      decoration: const BoxDecoration(
-                                        border: Border.symmetric(
-                                          horizontal: BorderSide(
-                                            color: Colors.black,
-                                            width: 1,
-                                          ),
+                              final isTotal = index == salesData.length - 1;
+
+                              return TableRow(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: isTotal
+                                          ? Colors.black54
+                                          : Colors.grey.shade300,
+                                      width: isTotal ? 1.5 : 0.8,
+                                    ),
+                                    top: isTotal
+                                        ? const BorderSide(
+                                            color: Colors.black54,
+                                            width: 1.5,
+                                          )
+                                        : BorderSide.none,
+                                  ),
+                                ),
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                    ),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: isTotal ? 18 : 16,
+                                          fontWeight: isTotal
+                                              ? FontWeight.bold
+                                              : FontWeight.w500,
                                         ),
+                                        children: [
+                                          TextSpan(text: item['category']),
+                                          const TextSpan(text: ' ('),
+                                          TextSpan(
+                                            text: '${item['units']}',
+                                            style: const TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const TextSpan(
+                                            text: ')',
+                                            style: TextStyle(
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: '${item['category']} ',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              const TextSpan(
-                                                text: '(',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: '${item['units']}',
-                                                style: const TextStyle(
-                                                  color: Colors.blue,
-                                                ),
-                                              ),
-                                              const TextSpan(
-                                                text: ')',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const Text(
-                                          '=',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Rs.${item['price']}',
-                                          textAlign: TextAlign.end,
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                      ],
-                                    )
-                                  : TableRow(
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: '${item['category']} ',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              const TextSpan(
-                                                text: '(',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: '${item['units']}',
-                                                style: const TextStyle(
-                                                  color: Colors.blue,
-                                                ),
-                                              ),
-                                              const TextSpan(
-                                                text: ')',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const Text(
-                                          '=',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Rs.${item['price']}',
-                                          textAlign: TextAlign.end,
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                      ],
-                                    );
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                    ),
+                                    child: Text(
+                                      '=',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: isTotal ? 18 : 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                    ),
+                                    child: Text(
+                                      '₹${item['price']}',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: isTotal ? 18 : 16,
+                                        fontWeight: isTotal
+                                            ? FontWeight.bold
+                                            : FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
                             }),
                           ),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //     horizontal: 10.0,
+                        //     vertical: 10,
+                        //   ),
+                        //   child: Table(
+                        //     columnWidths: const {
+                        //       0: FlexColumnWidth(6),
+                        //       1: FlexColumnWidth(1),
+                        //       2: FlexColumnWidth(4),
+                        //     },
+                        //     children: List.generate(salesData.length, (index) {
+                        //       final item = salesData[index];
+                        //       return index == salesData.length - 1
+                        //           ? TableRow(
+                        //               decoration: const BoxDecoration(
+                        //                 border: Border.symmetric(
+                        //                   horizontal: BorderSide(
+                        //                     color: Colors.black,
+                        //                     width: 1,
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //               children: [
+                        //                 RichText(
+                        //                   text: TextSpan(
+                        //                     style: const TextStyle(
+                        //                       fontSize: 20,
+                        //                     ),
+                        //                     children: [
+                        //                       TextSpan(
+                        //                         text: '${item['category']} ',
+                        //                         style: const TextStyle(
+                        //                           color: Colors.black,
+                        //                         ),
+                        //                       ),
+                        //                       const TextSpan(
+                        //                         text: '(',
+                        //                         style: TextStyle(
+                        //                           color: Colors.black,
+                        //                         ),
+                        //                       ),
+                        //                       TextSpan(
+                        //                         text: '${item['units']}',
+                        //                         style: const TextStyle(
+                        //                           color: Colors.blue,
+                        //                         ),
+                        //                       ),
+                        //                       const TextSpan(
+                        //                         text: ')',
+                        //                         style: TextStyle(
+                        //                           color: Colors.black,
+                        //                         ),
+                        //                       ),
+                        //                     ],
+                        //                   ),
+                        //                 ),
+                        //                 const Text(
+                        //                   '=',
+                        //                   style: TextStyle(
+                        //                     fontSize: 20,
+                        //                     fontWeight: FontWeight.w500,
+                        //                   ),
+                        //                 ),
+                        //                 Text(
+                        //                   'Rs.${item['price']}',
+                        //                   textAlign: TextAlign.end,
+                        //                   style: const TextStyle(fontSize: 20),
+                        //                 ),
+                        //               ],
+                        //             )
+                        //           : TableRow(
+                        //               children: [
+                        //                 RichText(
+                        //                   text: TextSpan(
+                        //                     style: const TextStyle(
+                        //                       fontSize: 20,
+                        //                     ),
+                        //                     children: [
+                        //                       TextSpan(
+                        //                         text: '${item['category']} ',
+                        //                         style: const TextStyle(
+                        //                           color: Colors.black,
+                        //                         ),
+                        //                       ),
+                        //                       const TextSpan(
+                        //                         text: '(',
+                        //                         style: TextStyle(
+                        //                           color: Colors.black,
+                        //                         ),
+                        //                       ),
+                        //                       TextSpan(
+                        //                         text: '${item['units']}',
+                        //                         style: const TextStyle(
+                        //                           color: Colors.blue,
+                        //                         ),
+                        //                       ),
+                        //                       const TextSpan(
+                        //                         text: ')',
+                        //                         style: TextStyle(
+                        //                           color: Colors.black,
+                        //                         ),
+                        //                       ),
+                        //                     ],
+                        //                   ),
+                        //                 ),
+                        //                 const Text(
+                        //                   '=',
+                        //                   style: TextStyle(
+                        //                     fontSize: 20,
+                        //                     fontWeight: FontWeight.w500,
+                        //                   ),
+                        //                 ),
+                        //                 Text(
+                        //                   'Rs.${item['price']}',
+                        //                   textAlign: TextAlign.end,
+                        //                   style: const TextStyle(fontSize: 20),
+                        //                 ),
+                        //               ],
+                        //             );
+                        //     }),
+                        //   ),
+                        // ),
                         const SizedBox(height: 10),
 
                         const Text(

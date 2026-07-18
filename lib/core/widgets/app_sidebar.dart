@@ -47,7 +47,7 @@ class _AppSidebarState extends State<AppSidebar> {
             child: ListView(
               children: [
                 DrawerListTail(
-                  title: isExpanded ? 'HOME PAGE' : '',
+                  title: isExpanded ? 'Home Page' : '',
                   icon: Icons.home,
                   onTap: () async {
                     String shopId = await getIt<ShopIdController>().getShopId();
@@ -58,7 +58,7 @@ class _AppSidebarState extends State<AppSidebar> {
                 ),
                 Container(height: 1, color: Colors.black12),
                 DrawerListTail(
-                  title: isExpanded ? 'VIEW DATE' : '',
+                  title: isExpanded ? 'View Date' : '',
                   icon: Icons.date_range,
                   onTap: () async {
                     String shopId = await getIt<ShopIdController>().getShopId();
@@ -69,7 +69,7 @@ class _AppSidebarState extends State<AppSidebar> {
                 ),
                 Container(height: 1, color: Colors.black12),
                 DrawerListTail(
-                  title: isExpanded ? "BRAND" : '',
+                  title: isExpanded ? "Brand" : '',
                   icon: Icons.pending_actions_rounded,
                   onTap: () async {
                     String shopId = await getIt<ShopIdController>().getShopId();

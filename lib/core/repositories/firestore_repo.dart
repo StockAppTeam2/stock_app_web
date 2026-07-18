@@ -10,7 +10,6 @@ import 'package:stock_app_web/models/sales_table_model.dart';
 
 class FirestoreRepo {
   final firestoreService = getIt<FirestoreService>();
-  final _brandFirestoreRepo = getIt<BrandFirestoreRepo>();
   final cacheRepository = getIt<CacheRepository>();
 
   Future<List<String>> loadFirstPageViewDate({

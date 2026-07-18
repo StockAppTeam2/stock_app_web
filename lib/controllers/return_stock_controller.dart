@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
 import 'package:stock_app_web/core/repositories/brand_firestore_repo.dart';
 import 'package:stock_app_web/core/repositories/firestore_repo.dart';
@@ -59,5 +60,40 @@ class ReturnStockController {
     }
 
     return valuesList;
+  }
+
+  Future<void> addReturnStock(ReturnModel returnModel) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
+
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('return_stock')
+        .doc(shopId)
+        .collection('date')
+        .doc(returnModel.date);
+
+    Map<String, dynamic> data = createReturnMapForFirebase(returnModel);
+
+    await documentReference.set({data}, SetOptions(merge: true));
+  }
+
+  Map<String, dynamic> createReturnMapForFirebase(ReturnModel data) {
+    Map<String, dynamic> itemsData = {};
+
+    itemsData[data.productId.toString()] = data.toMap();
+
+    return itemsData;
+  }
+
+  Future<void> deleteReturn(String productId, String date) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('return_stock')
+        .doc(shopId)
+        .collection('date')
+        .doc(date);
+
+    await documentReference.set({
+      productId: FieldValue.delete(),
+    }, SetOptions(merge: true));
   }
 }

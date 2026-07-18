@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:stock_app_web/controllers/shop_id_controller.dart';
 import 'package:stock_app_web/core/locator/service_locator.dart';
+import 'package:stock_app_web/core/repositories/cache_repository.dart';
 import 'package:stock_app_web/core/services/firestore_service.dart';
 import 'package:stock_app_web/models/pos_model.dart';
 
 class PosController {
   final firestoreService = getIt<FirestoreService>();
+  final _cache = getIt<CacheRepository>();
 
   Future<List<int>> getPosDataUsingDateInFirebase(
     String todayDate,
@@ -91,43 +94,22 @@ class PosController {
   }
 
   Future<List<String>> getAvailableMonths(String shopId) async {
-    final List<String> months = [];
+    final snapshot = await FirebaseFirestore.instance
+        .collection('pos')
+        .doc(shopId)
+        .collection('date')
+        .get();
 
-    DateTime current = DateTime(2024, 10, 1);
-    DateTime today = DateTime.now();
+    final months = <String>{}; // Set removes duplicates
 
-    while (!current.isAfter(today)) {
-      String date =
-          '${current.year.toString().padLeft(4, '0')}-'
-          '${current.month.toString().padLeft(2, '0')}-'
-          '${current.day.toString().padLeft(2, '0')}';
-
-      print('date $date');
-
-      DocumentSnapshot doc = await FirebaseFirestore.instance
-          .collection('pos')
-          .doc(shopId)
-          .collection('date')
-          .doc(date)
-          .get();
-
-      if (doc.exists) {
-        print('doc exist $doc');
-        months.add(
-          '${current.year}-${current.month.toString().padLeft(2, '0')}',
-        );
-
-        // Jump to the first day of the next month
-        print('Jump to the first day of the next month');
-        current = DateTime(current.year, current.month + 1, 1);
-      } else {
-        // Check the next day
-        print('Check the next day');
-        current = current.add(const Duration(days: 1));
-      }
+    for (final doc in snapshot.docs) {
+      // Document ID format: yyyy-MM-dd
+      final month = doc.id.substring(0, 7); // yyyy-MM
+      months.add(month);
     }
 
-    return months;
+    final result = months.toList()..sort();
+    return result;
   }
 
   Map<String, String> getMonthRange(String yearMonth) {
@@ -170,5 +152,57 @@ class PosController {
     return snapshot.docs
         .map((doc) => NewPosModel.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
+  }
+
+  Future<void> addNewPosData(NewPosModel newData) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
+
+    final now = DateTime.now();
+
+    final start = '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
+    final end = '${now.year}-${(now.month + 1).toString().padLeft(2, '0')}-01';
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('pos')
+        .doc(shopId)
+        .collection('date')
+        .where('posDate', isGreaterThanOrEqualTo: start)
+        .where('posDate', isLessThan: end)
+        .orderBy('posDate', descending: true)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final latestDoc = snapshot.docs.first;
+      print(latestDoc.id);
+      newData.posCumulative =
+          newData.posValue + latestDoc.get('posCumulative') as int;
+    } else {
+      newData.posCumulative = newData.posValue;
+    }
+
+    // items id
+    int lastPosId = await _cache.getIntCacheFirebase(key: 'lastPosId');
+    await _cache.addIntCacheFirebase('lastPosId', lastPosId + 1);
+
+    newData.id = lastPosId + 1;
+
+    DocumentReference posInfoRef = FirebaseFirestore.instance
+        .collection('pos')
+        .doc(shopId)
+        .collection('date')
+        .doc(newData.posDate);
+
+    await posInfoRef.set(newData.toMap(), SetOptions(merge: true));
+  }
+
+  Future<void> deletePos(NewPosModel product) async {
+    String shopId = await getIt<ShopIdController>().getShopId();
+    DocumentReference posInfoRef = FirebaseFirestore.instance
+        .collection('pos')
+        .doc(shopId)
+        .collection('date')
+        .doc(product.posDate);
+    await posInfoRef.delete();
   }
 }
